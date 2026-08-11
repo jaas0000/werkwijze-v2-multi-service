@@ -1,6 +1,7 @@
 # ADR-0002: Eén monolithische API, geen microservices
 
-**Status:** geaccepteerd
+**Status:** geaccepteerd — geldt voor het `voorbeeld/` met een single-service stack (v1-context);
+v2-projecten met meerdere services vervangen dit ADR door een eigen topologie-beslissing.
 **Datum:** 2026-08-10 <!-- met terugwerkende kracht vastgelegd -->
 
 ## Context

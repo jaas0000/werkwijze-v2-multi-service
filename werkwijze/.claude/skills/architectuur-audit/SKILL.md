@@ -31,7 +31,7 @@ description: >-
    betrokken features om de gekozen route te gebruiken, en voeg in elke betrokken story de
    passende terugverwijzing toe (zie regel 8 voor het exacte formaat). Vind je precies één
    voorkomen van een patroon: laat het staan — duplicatie is pas een probleem ná de tweede,
-   onafhankelijke implementatie.
+   onafhankelijke implementatie (zie `feature-bouwen` regel 8).
 
 3. **Cohesie.** Groeit `db.py` of `main.py` naar meer dan een dun samenvoegpunt (tabellen,
    routelogica, of domeinkennis die er niet hoort, zie `feature-bouwen` regel 2)? Groeit een

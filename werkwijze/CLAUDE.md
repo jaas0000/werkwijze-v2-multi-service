@@ -65,16 +65,12 @@ Vorm van de code zelf (opmaak, imports, ongebruikte variabelen) is een geautomat
 geen proza-richtlijn — een geschreven stijlgids die niemand afdwingt is hetzelfde
 "geen vangrail"-probleem als elders in dit document (§Verificatie-principe).
 
-- **Python:** `ruff` (`api/pyproject.toml` §tool.ruff) — `ruff check .` (lint) en
-  `ruff format --check .` (opmaak). `B008` (Depends-in-default) staat uit: dat is FastAPI's
-  eigen idioom, geen bug.
-- **TypeScript:** `eslint` (`frontend/eslint.config.js`) + `prettier`
-  (`frontend/.prettierrc.json`) — `npm run lint` en `npm run format:check`.
+- **Python:** `ruff` (zie `stack-profiel.md` §Codestandaard voor de exacte config) — lint en format-check.
+- **TypeScript:** `eslint` + `prettier` — `npm run lint` en `npm run format:check`.
 
-Beide draaien in CI (`check-python-style` + `check-ts-style` in `.github/workflows/ci.yml`) — dat is been 1 van het
-Verificatie-principe, dus geen aparte checklist-regel nodig in `feature-bouwen` of `code-review`.
-Draai `ruff format .`/`npm run format` lokaal vóór je aflevert om een CI-fail puur op opmaak te
-voorkomen; dat is gemak, geen verplichte stap.
+Beide draaien in CI — dat is been 1 van het Verificatie-principe, dus geen aparte
+checklist-regel nodig in `feature-bouwen` of `code-review`. Draai de formatters lokaal vóór je
+aflevert om een CI-fail puur op opmaak te voorkomen; dat is gemak, geen verplichte stap.
 
 ## Skills
 
@@ -127,13 +123,6 @@ flowchart TD
     Shared -.-> FB
 ```
 
-`frontend-bouwen` is de enige optionele stap. Staat **Simplify bij feature-bouwen** op `nee`,
-dan slaat `feature-bouwen` de daadwerkelijke `/simplify`-run over, maar schrijft dat expliciet
-als `Simplify: overgeslagen` in het commit-/PR-bericht — geen stille leegte
-(§Verificatie-principe). `pr-triage` is het knooppunt dat per PR de volgende stap bepaalt (zie
-`.claude/skills/pr-triage/SKILL.md` regel 1 voor de volledige staattabel). `architectuur-audit`
-en `dependency-updates` staan los van de PR-cyclus, elk op een eigen cadans.
-`docs/vervolgpunten.md` is het gedeelde eindpunt voor alles wat niet direct is opgelost.
 
 ## Documentatiestructuur
 

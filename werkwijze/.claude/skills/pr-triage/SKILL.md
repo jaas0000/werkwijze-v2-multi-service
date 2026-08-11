@@ -33,9 +33,9 @@ description: >-
    | Laatste `code-review`-comment noemt de huidige HEAD-SHA zonder blocking bevindingen, Autonome merge = `nee`, nog geen goedkeuring ná die SHA | **Zet een PR-comment** en wacht — zie regel 2b. |
    | Laatste `code-review`-comment noemt de huidige HEAD-SHA zonder blocking bevindingen, en (Autonome merge = `ja`) of (Autonome merge = `nee` mét menselijke goedkeuring ná die SHA) | **Mergen**, zie regel 4 en 5. |
 
-2. **Nooit mergen zonder dat er een review heeft plaatsgevonden.** Ook een documentatie-only
-   of ogenschijnlijk triviale PR gaat eerst langs `code-review` — er is geen kortsluitroute op
-   basis van "dit is toch simpel". Dat oordeel is te vaag om aan deze skill over te laten.
+2. **Nooit mergen zonder review, behalve de uitzondering hieronder.** Een documentatie-only of
+   ogenschijnlijk triviale PR gaat eerst langs `code-review` — "dit is toch simpel" is te vaag
+   om aan deze skill over te laten.
 
    **2a. De ene uitzondering: mechanische dependency-bumps.** Vereist een PR-comment of label
    van `dependency-updates` die de bump expliciet als mechanisch markeert (regel 2 van die

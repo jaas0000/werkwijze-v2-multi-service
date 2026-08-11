@@ -11,8 +11,7 @@ Deze repo bestaat uit twee mappen:
   Zie `werkwijze/CLAUDE.md` voor de volledige methodologie-uitleg.
 - **`voorbeeld/`** — werkende referentie-implementaties die de werkwijze in de praktijk laten
   zien, elk in een eigen submap met een eigen stack-profiel:
-  - `wetsanalyse/` — referentie-implementatie voor v2: meerdere deploybare services, Next.js BFF,
-    LLM-orkestratie, async achtergrondtaken. Nog niet volledig uitgebouwd; zie
+  - `wetsanalyse/` — referentie-implementatie voor v2 (nog niet volledig uitgebouwd); zie
     `voorbeeld/wetsanalyse/CLAUDE.md`.
 
   Elke submap onder `voorbeeld/` is zelf het kopieerbare startpunt voor een nieuw project met
@@ -36,9 +35,5 @@ actuele startpunten.
 
 ## Geen CI op deze repo
 
-`.github/` staat onder `voorbeeld/wetsanalyse/` (waar het inhoudelijk bij hoort — CI en
-dependabot gaan over die referentie-implementatie, niet over de methodologie), maar GitHub leest
-workflows en dependabot-config uitsluitend van de root van een repository. Zolang
-`voorbeeld/wetsanalyse/` hier een submap is, draait er dus geen CI en scant Dependabot niets op
-déze repo. Dat is bewust geaccepteerd totdat `voorbeeld/wetsanalyse/` als eigen repo bestaat —
-zie `werkwijze/CLAUDE.md` §Een nieuw project starten.
+Zie `werkwijze/CLAUDE.md` §Een nieuw project starten voor de kanttekening over GitHub Actions
+en Dependabot zolang `voorbeeld/wetsanalyse/` een submap is in plaats van een eigen repo.

@@ -13,10 +13,9 @@ controleren.
 
 ## Beslissing
 
-Codestijl wordt afgedwongen via tooling, niet via documentatie: `ruff` (Python,
-`api/pyproject.toml`) en `eslint` + `prettier` (TypeScript, `frontend/eslint.config.js` +
-`.prettierrc.json`), beide gecontroleerd in CI (`check-code-style`). Zie `CLAUDE.md`
-§Codestandaard.
+Codestijl wordt afgedwongen via tooling, niet via documentatie: `ruff` (Python) en `eslint` +
+`prettier` (TypeScript), beide gecontroleerd in CI (`check-python-style` + `check-ts-style`).
+Zie `CLAUDE.md` §Codestandaard en `stack-profiel.md` voor de projectspecifieke config-paden.
 
 ## Consequenties
 

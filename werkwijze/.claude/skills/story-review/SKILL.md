@@ -25,7 +25,7 @@ eraan begint.
      vertalen zijn naar een gedragstest (`feature-bouwen` regel 6). Een criterium als "het
      werkt intuïtief" is geen acceptatiecriterium.
    - **Schemabeslissing is expliciet** — velden en types staan benoemd, niet impliciet
-     ("een boek heeft de gebruikelijke velden") (`feature-bouwen` regel 1).
+     ("een analyse heeft de gebruikelijke velden") (`feature-bouwen` regel 1).
    - **Edge cases zijn benoemd** — wat gebeurt er bij ongeldige invoer, een actie op iets dat
      niet bestaat, of een actie die al is uitgevoerd (dubbel inleveren, dubbel aanmaken)? Als
      de story een regel impliceert zonder 'm uit te spreken, is dat een onduidelijkheid.

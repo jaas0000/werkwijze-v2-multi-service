@@ -95,7 +95,7 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
    bestaande implementatie in plaats van te kopiëren. Twee gevallen, met een andere bestemming:
 
    - **Het patroon hoort bij één entiteit die een andere feature al bezit** (bijvoorbeeld:
-     "bestaat dit boek?" hoort bij `Boek`, dat eigendom is van `uitlenen`) → maak de bestaande
+     "bestaat deze analyse?" hoort bij `Analyse`, dat eigendom is van `analyseren`) → maak de bestaande
      functie openbaar in de eigenaar-feature (geen underscore-prefix), importeer 'm vanuit de
      consumerende feature. Geen `shared/`-geval: er is een duidelijke eigenaar.
    - **Het patroon heeft geen natuurlijke eigenaar** (een generieke implementatie die evengoed
@@ -151,20 +151,18 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
 
 ## Bekende valkuilen
 
-- **`SQLModel Relationship()` + generic forward-ref (`list["Y"]`) onder
-  `from __future__ import annotations`** → `sqlalchemy.exc.InvalidRequestError` bij
-  mapper-initialisatie; de class-registry kan de gestringificeerde annotatie niet resolven.
-  Oplossing: voeg geen ORM-relatie toe die je niet gebruikt (zoek op via een query), of gebruik
-  `TYPE_CHECKING`-imports met expliciete `Mapped[...]`-annotaties.
 - **`datetime.utcnow()` is deprecated** — gebruik `datetime.now(UTC)`.
 - **`openapi-typescript` trekt via `@redocly/openapi-core` soms een kwetsbare `js-yaml`-versie
   mee** zonder beschikbare fix. Dev-only build-tooling — risico is acceptabel, raakt nooit de
   productie-runtime.
+- **SQLModel-specifieke valkuilen** (zoals `Relationship()` + forward-ref onder
+  `from __future__ import annotations`) staan in `werkwijze-v1-contract-first` — niet relevant
+  als `stack-profiel.md` een andere ORM beschrijft.
 - **Zonder het eigenaar/ownerless-onderscheid in regel 8 verzandt gedeeld gedrag in een
   asymmetrische herimplementatie**: een tweede feature die dezelfde check nodig heeft als een
   bestaande (bijvoorbeeld "bestaat deze entiteit?") krijgt dan al snel een eigen, private
   kopie in plaats van de bestaande functie te hergebruiken, simpelweg omdat er geen duidelijke
-  "plek" leek te zijn om naartoe te verwijzen. Vandaar de twee expliciete routes in regel 8.
+  "plek" leek te zijn om naartoe te verwijzen.
 - **Een checklist-item dat alleen als tekst in een lijst staat, is makkelijk te missen zodra de
   rest van het werk klaar aanvoelt** — met name vlak vóór het committen, wanneer de aandacht al
   naar de volgende taak is verschoven. Vandaar de expliciete checklist in regel 9 én de
@@ -177,8 +175,8 @@ raakt): voeg hem hier toe als een generieke les, niet als een verslag van één 
 ## Wat dit niet oplost
 
 - **Migratie van een bestaande productiedatabase** — Alembic, los van dit patroon (regel 7).
-- **Contracten tussen services** — een los draaiend ander proces, of een ongetypeerd
-  streaming-endpoint, valt buiten bereik: OpenAPI/openapi-typescript dekt alleen wat via een
-  `response_model` in déze FastAPI-app loopt.
+- **Contracten tussen services** — OpenAPI/openapi-typescript dekt alleen wat via een
+  `response_model` in déze service loopt; cross-service contracten (aparte schema's,
+  versiebeheer tussen services) zijn een open backlog-item voor v2, niet een geaccepteerde grens.
 - **Precisie die de bron zelf niet heeft** — een `str` in plaats van een `Literal[...]`
   genereert een losse `string`, geen strikter type. Wees scherp in regel 3.

@@ -23,11 +23,10 @@ gehad.
    voor dat soort PR's, niet voor een documentatie- of CI-only wijziging:
    - Nieuwe tabellen/routes staan in een eigen `features/<naam>/`-map, niet rechtstreeks in
      `db.py` of `main.py` (`feature-bouwen` regel 2).
-   - Schema staat alleen in `models.py` (SQLModel-classes) — geen los Pydantic-model of losse
-     tabeldefinitie ernaast (`feature-bouwen` regel 3).
-   - `frontend/generated/*` is alleen gewijzigd via `scripts/genereer-types.sh`, niet met de
-     hand — bij twijfel: script opnieuw draaien en diffen tegen wat de PR aanlevert
-     (`feature-bouwen` regel 4).
+   - Schema staat alleen op de "ene bron" (zie `stack-profiel.md`) — geen los contract ernaast
+     (`feature-bouwen` regel 3).
+   - Gegenereerde types zijn alleen gewijzigd via het generatiescript, niet met de hand — bij
+     twijfel: script opnieuw draaien en diffen (`feature-bouwen` regel 4).
    - Businessregels en auth-checks staan in `router.py`, niet in `models.py` (`feature-bouwen`
      regel 3 vs. 5).
    - Tests toetsen acceptatiecriteria en randgevallen, niet vorm die al door het schema
@@ -39,9 +38,8 @@ gehad.
      story — beide vormen uit `feature-bouwen` regel 8 zijn geldig — of is er een duidelijke
      reden waarom het (nog) niet gedeeld is?
    - **Raakt de PR `frontend/src/`?** Staat er een Playwright-E2E-test bij in
-     `frontend/tests/e2e/` (`frontend-bouwen` regel 6), niet alleen een handmatig weggegooid
-     scriptje? CI kan dit niet zelfstandig afdwingen (een ontbrekende test laat CI gewoon groen
-     — zie `frontend-bouwen` regel 6 voor de reden), dus dit is hier de daadwerkelijke check.
+     `frontend/tests/e2e/` (`frontend-bouwen` regel 6)? CI controleert de aanwezigheid via
+     `check-frontend-e2e-coverage`, maar niet of de test zinvol is — dit is de kwalitatieve check.
    - **Voegt de PR een nieuwe map onder `api/app/features/` toe, of het eerste bestand onder
      `frontend/src/`?** Dan hoort `docs/architectuur/c4-model.md` mee te veranderen (de
      Component-sectie bij een nieuwe feature, de Container-sectie bij de eerste frontend-map).
@@ -55,7 +53,7 @@ gehad.
 
 2. **Story-drift** — alleen relevant voor PR's die onder regel 1 vallen. Controleer dat
    `docs/stories/<nummer>-<naam>.md` overeenkomt met wat de code doet. Ontbreekt de story bij
-   zo'n PR, dan is de PR niet compleet. Een documentatie- of CI-only PR heeft geen story nodig.
+   zo'n PR, dan is de PR niet compleet.
 
 3. Generieke correctheid en veiligheid: input-validatie voorbij het schema, auth op nieuwe
    endpoints, geen secrets in code of migraties.
