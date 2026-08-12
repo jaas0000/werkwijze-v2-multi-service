@@ -9,12 +9,14 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
       events, en hoe een service-grens in `stack-profiel.md` §Topologie beschreven wordt zodat
       de skills 'm kunnen lezen
 - [ ] Contract-first — SQLAlchemy Core + Pydantic + openapi-typescript; CI dwingt generatie af.
-      Nog open: hoe "de ene bron" er in die combinatie concreet uitziet (welk bestand, welke
-      relatie tussen tabeldefinitie en Pydantic-model), en hoe de generatieketen heet — de
-      skills verwijzen daarvoor nu naar `stack-profiel.md` §De ene bron / §Contractgeneratie
+      Het patroon zelf (welk bestand, relatie tabeldefinitie ↔ Pydantic-model, naam van de
+      generatieketen) ligt vast in ADR-0011. Nog open: de CI-afdwinging zelf, die hangt af van
+      het "CI/CD per service"-punt hieronder
 - [ ] Cross-service contracten — hoe het contract tussen twee services vastligt en geversioneerd
       wordt (ADR-0002 stelt alleen dat het een eigen artefact is, geen gedeelde import)
-- [ ] API-versioning — automatisch, expliciete strategie zodat DB-evolutie consumers niet stilletjes breekt
+- [ ] API-versioning — het mechanisme (URL-prefix, `/v1/` naast `/v2/` bij een
+      backward-incompatibele wijziging) ligt vast in ADR-0010. Nog open: het uitfaseerbeleid
+      zelf — hoe lang een oude versie blijft bestaan, wie beslist wanneer hij weg mag
 - [ ] CI/CD per service — monorepo-matrix of losse workflows. De werkwijze verwijst al bij naam
       naar checks die deze workflow moet leveren: `check-generated-types`,
       `check-frontend-e2e-coverage`, `check-python-style`, `check-ts-style` en de testrun. Tot
@@ -22,9 +24,8 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
 - [ ] Vertical slicing per service — de indeling *binnen* een service (ADR-0001, ADR-0002); nog
       open: hoe gedeelde code tussen services eruitziet (gedeelde bibliotheek met eigen
       versionering, of bewuste duplicatie)
-- [ ] Migraties — Alembic (of gelijkwaardig) i.p.v. een handmatige schema-reconciliatiefunctie
-      met losse `ALTER TABLE`-statements; elke service met een eigen database heeft dit nodig,
-      niet optioneel zodra er een tweede schemawijziging komt
+- [x] Migraties — Alembic verplicht zodra een service een productiedatabase heeft, geen
+      handmatige schema-reconciliatiefunctie. Zie ADR-0005
 - [ ] Meerdere frontend-apps — topologie beschrijft nu alleen backend-services; hoeveel
       frontend-apps er zijn en hoe elk zich verhoudt tot welke service(s)/contract(en) staat nog
       nergens vast. `frontend-bouwen` gaat vooralsnog uit van precies één `frontend/`-pad
@@ -36,10 +37,10 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
 
 ## Optionele bouwstenen
 
-- [ ] Auth / login — twee gescheiden schema's, niet één: gebruikersinlog (Auth.js +
-      sessie-management + TOTP-2FA, rollen) én een apart service-naar-service/admin-schema
-      (bearer-tokens, andere levensduur/opslag/foutafhandeling dan gebruikersauth)
-- [ ] Secrets — genereren, opslaan als bestanden, doorgeven via `*_FILE`-patroon
+- [x] Auth / login — twee gescheiden schema's: gebruikersinlog (Auth.js + sessie-management +
+      TOTP-2FA, rollen) én een apart service-naar-service/admin-schema (bearer-tokens). Zie
+      ADR-0009
+- [x] Secrets — bestandsgebaseerd, `*_FILE`-patroon. Zie ADR-0006
 - [ ] MCP-server & -client — twee kanten: een eigen MCP-endpoint exposen (een service die
       andere partijen als MCP-server aanspreken) is een ander bouwstuk dan een externe
       MCP-service consumeren (het bestaande "MCP-client"-punt)
@@ -51,13 +52,15 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
       aanstuurt (bv. meerdere LLM-aanroepen + tussenstappen na elkaar); ander bouwstuk dan losse
       LLM-integratie, met een eigen vraag over waar die staat (eigen service, of binnen een
       feature) en hoe voortgang/status zichtbaar blijft
-- [ ] Async jobs — claim/lease/reaper/reconcile-bij-herstart
+- [x] Async jobs — claim/lease/reaper/reconcile-bij-herstart. Zie ADR-0008
 - [ ] Gedeelde referentie-/inhoudsbron tussen een interactieve skill en een runtime-service —
       bv. dezelfde reference-content die zowel een CLI-skill als een API-endpoint gebruikt; geen
       gewone databasetabel, dus valt buiten de standaard-Store-abstractie hieronder
 - [ ] Runtime-configuratie / feature-flags — instellingen die tijdens bedrijf wijzigen zonder
       herdeploy, los van Secrets (die zijn build-/opstarttijd) en los van Store-abstractie (die
       is voor domeindata)
-- [ ] Observability — structured logs, OTel, Grafana
-- [ ] Store-abstractie — Protocol-gebaseerde Store (SQLite in tests, Postgres in productie)
+- [ ] Observability — de baseline (structured JSON-logs + correlation-ID tussen services) ligt
+      vast in ADR-0012. Nog open: het log-/tracing-backend (OTel, Grafana) en de dashboards
+- [x] Store-abstractie — Protocol-gebaseerde Store (SQLite in tests, Postgres in productie). Zie
+      ADR-0007
 - [ ] Deployment — Azure ACA + Docker Compose lokaal
