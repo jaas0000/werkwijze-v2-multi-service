@@ -27,8 +27,12 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
       `api`. Zie het topologie-ADR hierboven
 
 - [ ] Referentie-implementatie `voorbeeld/wetsanalyse/` — `docs/architectuur/stack-profiel.md`
-      is nu ingevuld en het topologie-ADR staat er. Nog nodig: genoeg code om als kopieerbaar
-      skelet te dienen (`CLAUDE.md` §Hoe gebruik je dit gaat daar nog niet van uit)
+      is ingevuld, het topologie-ADR staat er, en de eerste feature (`api/app/features/feedback/`
+      — indienen, admin-lijst, verwijderen, ongelezen-aantal, markeer-gezien, met een eigen
+      `feedback_leesbewijzen`-tabel i.p.v. een geleende kolom op een users-tabel) staat er en is
+      groen (`uv run pytest`, `ruff`, `alembic upgrade head`). Nog nodig: de overige zeven
+      domeinen van `api`, de vijf andere services, en genoeg samenhang om als kopieerbaar skelet
+      te dienen (`CLAUDE.md` §Hoe gebruik je dit gaat daar nog niet van uit)
 
 ## Optionele bouwstenen
 

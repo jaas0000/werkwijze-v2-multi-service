@@ -10,8 +10,8 @@ Deze repo bestaat uit twee mappen:
   Zie `werkwijze/CLAUDE.md` voor de volledige methodologie-uitleg.
 - **`voorbeeld/`** — referentie-implementaties die de werkwijze in de praktijk laten zien, elk
   in een eigen submap met een eigen stack-profiel:
-  - `wetsanalyse/` — nog niet uitgebouwd: alleen een CLAUDE.md, nog geen code; zie
-    `voorbeeld/wetsanalyse/CLAUDE.md`.
+  - `wetsanalyse/` — in opbouw: topologie en stack-profiel liggen vast, en de `api`-service
+    bevat zijn eerste feature (feedback); zie `voorbeeld/wetsanalyse/CLAUDE.md`.
 
   Bedoeling is dat elke submap onder `voorbeeld/` zelf het kopieerbare startpunt is voor een
   nieuw project met die architectuur — niet `voorbeeld/` als geheel. Zover is het nog niet:
@@ -23,8 +23,9 @@ Deze repo bestaat uit twee mappen:
 2. Maak een lege repo voor je project. Kopieer daarin
    `werkwijze/docs/architectuur/stack-profiel.TEMPLATE.md` naar
    `docs/architectuur/stack-profiel.md` en vul 'm in — dat is de eerste stap, niet een
-   formaliteit achteraf (ADR-0004). Zolang `voorbeeld/wetsanalyse/` nog geen code bevat, is er
-   geen map om te kopiëren als skelet.
+   formaliteit achteraf (ADR-0004). `voorbeeld/wetsanalyse/` bevat inmiddels één feature
+   (`api/app/features/feedback/`) als voorbeeld van hoe die structuur eruitziet, maar nog niet
+   genoeg om als compleet skelet te kopiëren — zie `BACKLOG.md`.
 3. Zet de agent-root op een map die **beide** repo's bevat — de werkwijze-repo én je nieuwe
    project-repo — zodat de AI de methodologie kan lezen terwijl ze aan het project werkt.
 4. Kopieer `werkwijze/.claude/skills/` naar `<agent-root>/.claude/skills/` zodat de skills
