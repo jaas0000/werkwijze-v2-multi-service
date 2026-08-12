@@ -37,7 +37,7 @@ eraan begint.
    - **Auth/rollen zijn benoemd** — wie mag deze actie uitvoeren? Ontbreekt dit bij een
      muterend endpoint, dan is dat een onduidelijkheid, geen aanname om zelf te maken.
    - **Terugverwijzingen naar gedeelde logica zijn terecht** — verwijst de story naar
-     `shared/<naam>.py` of naar `<feature>.router.<functie>` (`feature-bouwen` regel 8),
+     `shared/<naam>.py` of naar `<feature>.<module>.<functie>` (`feature-bouwen` regel 8),
      verifieer dat die module/functie al bestaat, van toepassing is, en in dezelfde service
      staat — een terugverwijzing over een servicegrens heen kan niet (ADR-0002). Een verwijzing naar iets
      dat nog niet bestaat na precies één eerdere implementatie is zelf een onduidelijkheid, niet

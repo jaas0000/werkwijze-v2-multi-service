@@ -110,7 +110,7 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
    Ga hiervoor **niet** het hele project doorzoeken (dat staat haaks op regel 2) — systematisch
    zoeken naar duplicatie die je nog niet kende is `architectuur-audit`'s taak, niet die van
    deze skill. Gebruik je een van de twee routes: zet in de story van *deze* feature de regel
-   "gebruikt `shared/<naam>.py`, zie daar" of "gebruikt `<feature>.router.<functie>`, zie daar"
+   "gebruikt `shared/<naam>.py`, zie daar" of "gebruikt `<feature>.<module>.<functie>`, zie daar"
    — die terugverwijzing verwacht `architectuur-audit` aan te treffen, en helpt andere features
    het te vinden zonder te hoeven zoeken.
 

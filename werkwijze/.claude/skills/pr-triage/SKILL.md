@@ -29,7 +29,7 @@ description: >-
    | Draft, of CI-checks nog niet klaar | **Niets doen** — wachten. |
    | Dependency-bump mét een zichtbare `dependency-updates: mechanisch — <pakket> <van> → <naar>`-PR-comment (regel 2 van die skill), en CI is groen | **Mergen direct, `code-review` overslaan** — zie regel 2a. |
    | Laatste `code-review`-comment ("Review op `<sha>`: …") noemt niet de huidige HEAD-SHA van de PR, of zo'n comment ontbreekt | **`code-review`** starten. |
-   | Laatste `code-review`-comment noemt de huidige HEAD-SHA, en meldt blocking bevindingen | **Schakel `feature-bouwen` in** om de blocking issues op te lossen — dit is feature-werk en volgt diens regels (schema in `models.py`, logica in `router.py`, enz.), geen aparte ad-hoc aanpak vanuit deze skill. Na de fix opnieuw beoordelen (de nieuwe commit wijzigt de HEAD-SHA, dus de rij hierboven geldt weer). |
+   | Laatste `code-review`-comment noemt de huidige HEAD-SHA, en meldt blocking bevindingen | **Schakel `feature-bouwen` in** om de blocking issues op te lossen — dit is feature-werk en volgt diens regels (de ene bron, generatieketen, logica in de routelaag, enz.), geen aparte ad-hoc aanpak vanuit deze skill. Na de fix opnieuw beoordelen (de nieuwe commit wijzigt de HEAD-SHA, dus de rij hierboven geldt weer). |
    | Laatste `code-review`-comment noemt de huidige HEAD-SHA zonder blocking bevindingen, Autonome merge = `nee`, nog geen goedkeuring ná die SHA | **Zet een PR-comment** en wacht — zie regel 2b. |
    | Laatste `code-review`-comment noemt de huidige HEAD-SHA zonder blocking bevindingen, en (Autonome merge = `ja`) of (Autonome merge = `nee` mét menselijke goedkeuring ná die SHA) | **Mergen**, zie regel 4 en 5. |
 

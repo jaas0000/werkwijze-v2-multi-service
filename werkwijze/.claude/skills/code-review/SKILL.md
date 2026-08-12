@@ -35,7 +35,7 @@ gehad.
    - Raakt de wijziging een tabel die al in productie bestaat: is er een echte migratie, niet
      alleen een "maak ontbrekende tabellen aan"-aanname (`feature-bouwen` regel 7)?
    - Herhaalt de PR een patroon uit een andere feature: staat de terugverwijzing "gebruikt
-     `shared/<naam>.py`, zie daar" óf "gebruikt `<feature>.router.<functie>`, zie daar" in de
+     `shared/<naam>.py`, zie daar" óf "gebruikt `<feature>.<module>.<functie>`, zie daar" in de
      story — beide vormen uit `feature-bouwen` regel 8 zijn geldig — of is er een duidelijke
      reden waarom het (nog) niet gedeeld is?
    - **Raakt de PR meer dan één service?** Dan is de vraag of dat terecht is (ADR-0002): een
