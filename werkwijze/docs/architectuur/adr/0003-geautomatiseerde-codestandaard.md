@@ -24,6 +24,10 @@ Zie `CLAUDE.md` §Codestandaard en `stack-profiel.md` voor de projectspecifieke 
   zijn.
 - Geen aparte checklist-regel nodig in `feature-bouwen` of `code-review` — CI vangt dit
   onafhankelijk van zelfrapportage (been 1 van het Verificatie-principe).
+- Deze beslissing leunt volledig op been 1: zonder een CI-workflow die de twee checks
+  daadwerkelijk draait, is het weer een stijlgids die niemand afdwingt. Die workflow bestaat in
+  deze repo nog niet (`BACKLOG.md` §Core, CI/CD per service) — een project dat de werkwijze
+  overneemt, moet 'm zelf opzetten.
 - Nadeel, bewust geaccepteerd: de gekozen regels (`ruff`-selectie E/F/I/UP/B met `B008` uit,
   Prettier-defaults) zijn een startpunt, geen uitputtend doordachte stijlgids. Uitbreiden kan
   altijd; een regel die te veel valse positieven geeft, hoort hier expliciet uitgezet te worden

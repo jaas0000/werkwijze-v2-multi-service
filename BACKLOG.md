@@ -23,6 +23,11 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
       open: hoe gedeelde code tussen services eruitziet (gedeelde bibliotheek met eigen
       versionering, of bewuste duplicatie)
 
+- [ ] Referentie-implementatie `voorbeeld/wetsanalyse/` — bevat nu alleen een CLAUDE.md. Nodig:
+      een ingevuld `docs/architectuur/stack-profiel.md` (ADR-0004 verwijst ernaar als het
+      voorbeeld dat er nog niet is), plus genoeg code om als kopieerbaar skelet te dienen
+      (`CLAUDE.md` §Hoe gebruik je dit gaat daar nu expliciet niet van uit)
+
 ## Optionele bouwstenen
 
 - [ ] Auth / login — Auth.js + sessie-management + TOTP-2FA

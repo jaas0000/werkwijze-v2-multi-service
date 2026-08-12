@@ -26,6 +26,11 @@ eraan begint.
      werkt intuïtief" is geen acceptatiecriterium.
    - **Schemabeslissing is expliciet** — velden en types staan benoemd, niet impliciet
      ("een analyse heeft de gebruikelijke velden") (`feature-bouwen` regel 1).
+   - **De service is benoemd** — bij welke service hoort deze feature (`stack-profiel.md`
+     §Topologie, `feature-bouwen` regel 2)? Volgt dat niet eenduidig uit de story, dan is dat
+     een onduidelijkheid. Raakt de story er meer dan één, dan hoort in de story te staan wat
+     elke service doet en hoe ze elkaar aanroepen — twee services stilzwijgend in één story
+     stoppen is precies waar een contract tussen services vergeten wordt (ADR-0002).
    - **Edge cases zijn benoemd** — wat gebeurt er bij ongeldige invoer, een actie op iets dat
      niet bestaat, of een actie die al is uitgevoerd (dubbel inleveren, dubbel aanmaken)? Als
      de story een regel impliceert zonder 'm uit te spreken, is dat een onduidelijkheid.
@@ -33,7 +38,8 @@ eraan begint.
      muterend endpoint, dan is dat een onduidelijkheid, geen aanname om zelf te maken.
    - **Terugverwijzingen naar gedeelde logica zijn terecht** — verwijst de story naar
      `shared/<naam>.py` of naar `<feature>.router.<functie>` (`feature-bouwen` regel 8),
-     verifieer dat die module/functie al bestaat en van toepassing is. Een verwijzing naar iets
+     verifieer dat die module/functie al bestaat, van toepassing is, en in dezelfde service
+     staat — een terugverwijzing over een servicegrens heen kan niet (ADR-0002). Een verwijzing naar iets
      dat nog niet bestaat na precies één eerdere implementatie is zelf een onduidelijkheid, niet
      een vooruitziende blik om stilzwijgend te honoreren.
    - **Prioriteit is expliciet gekozen** (`none` / `low` / `medium` / `high`) — staat het veld

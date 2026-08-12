@@ -170,37 +170,36 @@ Per frontend (`stack-profiel.md` §Frontend(s)):
 
 ## Een nieuw project starten
 
-Gebruik `../voorbeeld/wetsanalyse/` als startpunt en kopieer de inhoud naar een nieuwe repo.
-`.github/` (CI, dependabot) staat mee in de submap, met paden zonder prefix — dat werkt
-onveranderd zodra die submap de root van een eigen repo wordt, geen handmatige stap nodig.
+1. **Vul het stack-profiel in.** Kopieer `docs/architectuur/stack-profiel.TEMPLATE.md` uit deze
+   repo naar `docs/architectuur/stack-profiel.md` in je project en beantwoord elke sectie —
+   welke services er zijn en waar ze staan, wat "de ene bron" is, of er contractgeneratie is,
+   hoe migraties lopen, welke frontends er zijn. Dit is de eerste stap, geen formaliteit
+   achteraf: `feature-bouwen` stopt zonder dit bestand (ADR-0004).
 
-Wijkt het nieuwe project qua stack af van het gekozen voorbeeld (geen SQLModel, geen
-contractgeneratie, meerdere services, ...): vervang `docs/architectuur/stack-profiel.md` door
-een eigen invulling (kopieer `docs/architectuur/stack-profiel.TEMPLATE.md` opnieuw) vóórdat je
-`feature-bouwen` gebruikt — zie ADR-0004. Regel 3 is de enige regel die dit tot nu toe
-consequent leest; de overige skills bevatten nog stack-specifieke aannames (zie ADR-0004
-§Consequenties voor de precieze lijst) totdat ze in een latere ronde gegeneraliseerd worden.
+2. **Zet CI op, per service.** De werkwijze leunt op been 1 van het Verificatie-principe en
+   noemt vier checks bij naam: `check-generated-types`, `check-frontend-e2e-coverage`,
+   `check-python-style` en `check-ts-style`, naast de testrun per service. Er wordt in deze repo
+   nog geen kant-en-klare workflow meegeleverd — hoe die eruitziet (monorepo-matrix of losse
+   workflows per service) is een open punt in `BACKLOG.md` §Core. Tot je die hebt, rust elke
+   controle op been 2 (een ander die het nakijkt), wat aantoonbaar zwakker is.
 
-**Kanttekening voor déze monorepo:** GitHub Actions en Dependabot lezen uitsluitend
-`.github/` op de root van een repository, nooit uit een submap. Zolang `werkwijze/` en
-`voorbeeld/wetsanalyse/` in dezelfde GitHub-repo zitten, draait er dus geen CI en scant
-Dependabot niets — `voorbeeld/wetsanalyse/.github/` bestaat in de juiste vorm voor ná het
-splitsen, maar wordt tot die tijd door GitHub genegeerd. Been 1 van het Verificatie-principe
-staat daarmee tijdelijk stil voor deze repo zelf; dat is een bewuste, geaccepteerde keuze
-totdat `voorbeeld/wetsanalyse/` als eigen repo bestaat, niet iets om nu nog op te lossen door
-`.github/` (ook) op de root te dupliceren.
+3. **Kopieer `.claude/skills/`** naar de root van je workspace (de map die alle repos bevat),
+   zodat de skills beschikbaar zijn vanuit elke submap:
 
-Kopieer daarna `.claude/skills/` naar de root van je workspace (de map die alle repos bevat),
-zodat de skills beschikbaar zijn vanuit elke submap:
+   ```
+   workspace/
+     .claude/
+       skills/          ← hierheen kopiëren
+     werkwijze-repo/    ← deze repo (werkwijze + voorbeeld/)
+     mijn-project/      ← je nieuwe repo
+   ```
 
-```
-workspace/
-  .claude/
-    skills/          ← hierheen kopiëren
-  werkwijze-repo/    ← deze repo (werkwijze + voorbeeld/wetsanalyse)
-  mijn-project/      ← nieuwe repo, gestart vanuit een van de voorbeelden
-```
+De skills verwijzen naar paden zonder prefix (`docs/`, en per service/frontend de mappen uit je
+stack-profiel) — dat zijn de paden zoals ze in een nieuw project heten, met de project-root als
+repo-root.
 
-De skills verwijzen naar `api/`, `frontend/`, `docs/` zonder prefix — dat zijn de paden zoals
-ze in een nieuw project heten (de project-root is de repo-root). In déze repo zitten ze onder
-`voorbeeld/wetsanalyse/`; zie de CLAUDE.md in die submap voor toelichting.
+**Kanttekening voor déze repo:** `voorbeeld/wetsanalyse/` is nog niet uitgebouwd, dus er is nog
+geen skelet om te kopiëren en geen voorbeeld van een ingevuld stack-profiel. Zodra dat er wel
+is, geldt bovendien dat GitHub Actions en Dependabot uitsluitend `.github/` op de root van een
+repository lezen, nooit uit een submap: zolang die referentie-implementatie een submap is,
+draait er voor die map geen CI en scant Dependabot niets.
