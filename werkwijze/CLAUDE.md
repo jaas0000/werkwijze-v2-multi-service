@@ -141,8 +141,9 @@ flowchart TD
     migraties, frontend(s), codestandaard. Kopieer de template uit deze repo
     (`werkwijze/docs/architectuur/stack-profiel.TEMPLATE.md`); vereist vóór `feature-bouwen`
     bruikbaar is (zie ADR-0004).
-- `docs/stories/TEMPLATE.md` — startpunt voor een nieuwe story (prioriteit `none`, story points nog
-  leeg); kopiëren en hernummeren, niet direct bewerken.
+- `docs/stories/TEMPLATE.md` — startpunt voor een nieuwe story (prioriteit `none`, story points
+  nog leeg, service in te vullen); kopieer 'm uit deze repo
+  (`werkwijze/docs/stories/TEMPLATE.md`) en hernummer, bewerk de template zelf niet.
 - `docs/stories/` — user stories + schemabeslissing, inclusief terugverwijzingen naar gedeelde
   modules en de door `story-review` aangevulde prioriteit + story points. Eén document per
   feature, genummerd.
@@ -152,6 +153,7 @@ flowchart TD
   verzameld, pure technische wijzigingen ontbreken. Bijgehouden door `pr-triage`.
 - `docs/changelog-technisch.md` — voor AI/team/developers, één regel per gemergde PR zonder
   uitzondering. Bijgehouden door `pr-triage`.
+
 Per service (welke services er zijn, staat in `stack-profiel.md` §Topologie — deze werkwijze
 codeert dat niet hard, zie ADR-0002):
 
