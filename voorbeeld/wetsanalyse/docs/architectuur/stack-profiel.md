@@ -33,9 +33,15 @@ een service is de grens van "de ene bron").
 
 Ja, zoals werkwijze-ADR-0011: `scripts/genereer-types.sh` binnen elke service die een frontend
 bedient (dus `api`, niet in de MCP-tool-services — die hebben hun eigen contractvorm, zie
-werkwijze-ADR-0013/0014). Contract tússen services (bv. `frontend` ↔ `api`) is het
-OpenAPI-schema van de aanbiedende service, geconsumeerd via de gegenereerde TypeScript-types;
-er is geen gedeelde package die twee services samen importeren (werkwijze-ADR-0002).
+werkwijze-ADR-0013/0014).
+
+Contract tússen services: zoals werkwijze-ADR-0017. `frontend` en `frontend-chat` genereren elk
+hun eigen TypeScript-client uit `api`'s OpenAPI-schema (`openapi-typescript`). `graph-qa`
+(Python) genereert uit datzelfde schema zijn eigen Pydantic-modellen (`datamodel-code-generator`)
+en schrijft de aanroep + error-boundary zelf (werkwijze-ADR-0014). Geen gedeelde package die
+twee services samen importeren. Zolang alle services in deze monorepo staan, leest elke
+consument `api`'s `openapi.json` via een relatief pad; dat verandert naar een gepubliceerd
+endpoint zodra een service als eigen repo wordt losgetrokken.
 
 ## Feature-eenheid
 

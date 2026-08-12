@@ -11,9 +11,9 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
       Het patroon (ADR-0011) én het CI-sjabloon (ADR-0016, stap 2) liggen vast, en de topologie
       is nu bekend (zes services). Nog open: de daadwerkelijke workflowbestanden per service
       bestaan nog niet
-- [ ] Cross-service contracten — hoe het contract tussen twee services vastligt en geversioneerd
-      wordt (ADR-0002 stelt alleen dat het een eigen artefact is, geen gedeelde import; ook het
-      nieuwe topologie-ADR laat dit expliciet open)
+- [x] Cross-service contracten — elke consument genereert zijn eigen typed client uit de
+      producent-service z'n OpenAPI-schema (geen gedeelde package), MCP-services vallen al onder
+      ADR-0013/0014. Zie ADR-0017
 - [x] API-versioning — mechanisme én uitfaseerbeleid liggen vast in ADR-0010
 - [ ] CI/CD per service — het sjabloon ligt vast (ADR-0016), en de matrix is nu bekend (zes
       services, zie topologie hierboven). Nog open: de workflowbestanden zelf moeten nog gebouwd
