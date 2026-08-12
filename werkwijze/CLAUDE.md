@@ -185,16 +185,19 @@ Per frontend (`stack-profiel.md` §Frontend(s)):
    workflows per service) is een open punt in `BACKLOG.md` §Core. Tot je die hebt, rust elke
    controle op been 2 (een ander die het nakijkt), wat aantoonbaar zwakker is.
 
-3. **Kopieer `.claude/skills/`** naar de root van je workspace (de map die alle repos bevat),
-   zodat de skills beschikbaar zijn vanuit elke submap:
+3. **Niets kopiëren.** Zet de agent-root op een workspace-map die zowel deze repo als je nieuwe
+   project-repo als sibling bevat:
 
    ```
    workspace/
-     .claude/
-       skills/          ← hierheen kopiëren
      werkwijze-repo/    ← deze repo (werkwijze + voorbeeld/)
      mijn-project/      ← je nieuwe repo
    ```
+
+   Claude Code ontdekt `.claude/skills/` uit elke aanwezige repo zelf en scoped ze automatisch op
+   pad (bv. `werkwijze-repo/werkwijze:code-review`) — ook als een andere, niet-verwante repo in
+   dezelfde workspace toevallig een skill met dezelfde naam heeft. Kopiëren naar een gedeelde
+   `<workspace-root>/.claude/skills/` is niet nodig en kan zo'n naamsbotsing juist veroorzaken.
 
 De skills verwijzen naar paden zonder prefix (`docs/`, en per service/frontend de mappen uit je
 stack-profiel) — dat zijn de paden zoals ze in een nieuw project heten, met de project-root als

@@ -27,9 +27,11 @@ Deze repo bestaat uit twee mappen:
    (`api/app/features/feedback/`) als voorbeeld van hoe die structuur eruitziet, maar nog niet
    genoeg om als compleet skelet te kopiëren — zie `BACKLOG.md`.
 3. Zet de agent-root op een map die **beide** repo's bevat — de werkwijze-repo én je nieuwe
-   project-repo — zodat de AI de methodologie kan lezen terwijl ze aan het project werkt.
-4. Kopieer `werkwijze/.claude/skills/` naar `<agent-root>/.claude/skills/` zodat de skills
-   beschikbaar zijn vanuit elke submap in de workspace.
+   project-repo — zodat de AI de methodologie kan lezen terwijl ze aan het project werkt. Niets
+   kopiëren: zolang deze repo als sibling-map in dezelfde workspace staat, ontdekt Claude Code
+   `.claude/skills/` uit elke aanwezige repo zelf en scoped ze automatisch op pad (bv.
+   `werkwijze-v2-multi-service/werkwijze:code-review`) — ook als een andere, niet-verwante repo
+   in dezelfde workspace toevallig een skill met dezelfde naam heeft.
 
 ## Bij wijzigingen in de werkwijze
 
