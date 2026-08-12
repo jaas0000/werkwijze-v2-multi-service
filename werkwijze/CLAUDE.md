@@ -14,12 +14,14 @@ rest; gedrag (businessregels) wordt apart, met de hand geschreven. Een feature h
 De werkwijze bestaat uit losse **skills** onder `.claude/skills/`, elk met een eigen trigger
 en regel-checklist. Dit bestand is de index — de skills zelf zijn het uitvoerbare document.
 
-De concrete uitwerking van "de ene bron" en de rest van wat een skill anders zou aannemen is
-per project vastgelegd in `docs/architectuur/stack-profiel.md` (zie ADR-0004) — de werkwijze
-zelf is niet aan één stack gebonden, ook al is `feature-bouwen` regel 3 vooralsnog de enige
-regel die dat consequent volgt. De werkende referentie-implementatie staat in `../voorbeeld/wetsanalyse/` (multi-service:
-Next.js BFF, LLM-orkestratie, async jobs). Zie de CLAUDE.md in die submap voor toelichting
-op de features en de relatie tot de werkwijze.
+De concrete uitwerking — welke services er zijn, wat "de ene bron" is, hoe de generatieketen
+heet — is per project vastgelegd in `docs/architectuur/stack-profiel.md` (zie ADR-0004). De
+werkwijze zelf is niet aan één stack gebonden; elke skill die zoiets nodig heeft, leest het daar
+en neemt het niet aan.
+
+`../voorbeeld/wetsanalyse/` is bedoeld als referentie-implementatie, maar bevat nog geen code —
+er staat dus nog geen ingevuld stack-profiel in deze repo, alleen de template met de vragen
+(`docs/architectuur/stack-profiel.TEMPLATE.md`).
 
 ## Verificatie-principe
 
@@ -131,13 +133,14 @@ flowchart TD
     daar voor wanneer elk niveau bijgewerkt moet worden.
   - `adr/NNNN-<naam>.md` — ADR's: projectbrede technische beslissingen (niet feature-specifiek,
     dat is `docs/stories/`): welke stack, hoe de services zijn afgebakend, welke afwezigheden
-    (auth, migraties) en waarom. Eén genummerd bestand per beslissing, kopieer `docs/architectuur/adr/TEMPLATE.md`.
+    (auth, migraties) en waarom. Eén genummerd bestand per beslissing, kopieer
+    `adr/TEMPLATE.md`.
     Een gemaakte, beargumenteerde keuze — geen open punt (dat is `docs/vervolgpunten.md`).
-  - `stack-profiel.md` — het projectspecifieke antwoord op de vragen die `feature-bouwen` regel 3
-    (en, naarmate meer regels gegeneraliseerd worden, mogelijk andere skills) niet meer
-    hardcodeert: de ene bron, contractgeneratie, feature-eenheid, dunne verzamelaars, topologie,
-    migraties, frontend(s). Kopieer `docs/architectuur/stack-profiel.TEMPLATE.md`; vereist vóór
-    `feature-bouwen` regel 3 bruikbaar is (zie ADR-0004).
+  - `stack-profiel.md` — het projectspecifieke antwoord op de vragen die de skills niet
+    hardcoderen: topologie, de ene bron, contractgeneratie, feature-eenheid, dunne verzamelaars,
+    migraties, frontend(s), codestandaard. Kopieer de template uit deze repo
+    (`werkwijze/docs/architectuur/stack-profiel.TEMPLATE.md`); vereist vóór `feature-bouwen`
+    bruikbaar is (zie ADR-0004).
 - `docs/stories/TEMPLATE.md` — startpunt voor een nieuwe story (prioriteit `none`, story points nog
   leeg); kopiëren en hernummeren, niet direct bewerken.
 - `docs/stories/` — user stories + schemabeslissing, inclusief terugverwijzingen naar gedeelde

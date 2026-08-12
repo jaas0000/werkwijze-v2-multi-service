@@ -1,63 +1,52 @@
 # ADR-0004: Stack-profiel voor projectspecifieke aannames
 
 **Status:** geaccepteerd
-**Datum:** 2026-08-10
+**Datum:** 2026-08-10 <!-- consequenties bijgewerkt 2026-08-12, toen de resterende skills de topologie uit dit bestand gingen lezen -->
 
 ## Context
 
-De werkwijze werd tot nu toe geschreven met precies één stack in gedachten (SQLModel/FastAPI,
-één class = tabel + contract, openapi-typescript-generatie naar één frontend, één monolithisch
-proces — zie ADR-0001 en ADR-0002). Die aannames staan hard gecodeerd in de skills zelf, met
-name in `feature-bouwen` regel 3 ("de ene bron" = een SQLModel-class).
+De skills waren geschreven met precies één concrete stack in gedachten: één ORM-class die
+tegelijk tabel en contract is, generatie naar precies één frontend, en alles in één
+deploy-eenheid. Die aannames stonden hard gecodeerd in de regels zelf — "de ene bron" wás een
+class van een specifieke ORM, "de" API-map en "de" frontend-map waren enkelvoud.
 
-Een project met een wezenlijk andere architectuur (bijvoorbeeld: SQLAlchemy Core in plaats van
-SQLModel, geen automatische contractgeneratie, meerdere services in plaats van één monoliet, een
-overwegend horizontale bestaande structuur in plaats van vertical-sliced feature-mappen) kan
-`feature-bouwen` regel 3 dan niet volgen — niet omdat het onderliggende principe ("vorm op één
-plek, expliciet, vóór gedrag") niet zou gelden, maar omdat de regel de concrete SQLModel-vorm
-ervan als enige mogelijkheid beschrijft.
+Een project met een andere architectuur kon die regels dan niet volgen. Niet omdat het
+onderliggende principe ("vorm op één plek, expliciet, vóór gedrag") niet zou gelden, maar omdat
+de regel één concrete vorm ervan als enige mogelijkheid beschreef. Voor déze werkwijze is dat
+geen theoretisch bezwaar: meerdere services (ADR-0002) betekent per definitie dat er geen "de"
+API-map bestaat.
 
 De rest van de werkwijze (Verificatie-principe, Simplify-stap, PR-triage-staatmachine,
-story-review-checklist, "duplicatie pas na de tweede implementatie", ADR-praktijk zelf) is al
-stack-onafhankelijk gebleken bij nader onderzoek — het gaat hier specifiek om de handvol regels
-die een concrete implementatievorm hardcoderen in plaats van een principe uit te drukken.
+story-review-checklist, "duplicatie pas na de tweede implementatie", de ADR-praktijk zelf) is
+wél stack-onafhankelijk — het gaat specifiek om de regels die een concrete implementatievorm
+noemen in plaats van een principe uit te drukken.
 
 ## Beslissing
 
-Een nieuw, projectspecifiek artefact — `docs/architectuur/stack-profiel.md`, met template
-`docs/architectuur/stack-profiel.TEMPLATE.md` — legt de antwoorden vast op de vragen die een
-skill anders stilzwijgend zou aannemen (de ene bron, contractgeneratie, feature-eenheid, dunne
-verzamelaars, topologie, migraties, frontend(s)). `feature-bouwen` regel 3 is als eerste, enige
-regel herschreven om naar dit bestand te verwijzen in plaats van SQLModel hard te coderen; het
-bestaande SQLModel-voorbeeld blijft staan als illustratie (zie `werkwijze-v1-contract-first`) als referentie voor die specifieke stack, niet als universele wet.
+Een projectspecifiek artefact — `docs/architectuur/stack-profiel.md`, gekopieerd uit
+`werkwijze/docs/architectuur/stack-profiel.TEMPLATE.md` — legt de antwoorden vast op de vragen
+die een skill anders stilzwijgend zou aannemen: de ene bron, contractgeneratie, feature-eenheid,
+dunne verzamelaars, topologie, migraties, frontend(s) en codestandaard.
 
-`voorbeeld/wetsanalyse/` krijgt zelf een ingevuld `stack-profiel.md` dat de v2-architectuurkeuzes
-herformuleert in deze vorm — het is een aparte, latere stap.
+De skills verwijzen naar dat bestand in plaats van een stack hard te coderen. Zonder ingevuld
+stack-profiel is `feature-bouwen` regel 3 een expliciete stop — geen impliciete aanname.
 
 ## Consequenties
 
-- Een project kan nu, in principe, `feature-bouwen` regel 3 volgen ongeacht zijn concrete
-  stack, zolang het zijn `stack-profiel.md` invult. Zonder dat bestand is regel 3 een expliciete
-  stop, geen impliciete SQLModel-aanname meer.
-- **Bewust nog niet gegeneraliseerd in deze ronde** (elk van deze bevat een vergelijkbare, nu nog
-  hardgecodeerde aanname, ontdekt bij hetzelfde onderzoek):
-  - `feature-bouwen` regel 4 ("Genereer de keten") — gaat nog uit van een openapi-typescript-
-    generatiescript; een stack-profiel zonder contractgeneratie (§Contractgeneratie = "nee")
-    heeft hier nog geen alternatief pad.
-  - `feature-bouwen` regel 7 ("Migratie apart") — verwijst nog rechtstreeks naar
-    `SQLModel.metadata.create_all()` in plaats van naar stack-profiel §Migraties.
-  - `code-review` — checklistpunten ("Schema staat alleen in `models.py` (SQLModel-classes)",
-    "`frontend/generated/*` is alleen gewijzigd via het genereerscript") zijn nog SQLModel-
-    specifiek geformuleerd.
-  - `architectuur-audit` regel 1 — leest nog specifiek `api/app/features/`, `api/app/db.py`,
-    `api/app/main.py`; geen mechanisme voor een multi-service-topologie (stack-profiel
-    §Topologie = "meerdere services").
-  - `frontend-bouwen` — gaat nog uit van precies één `frontend/`-pad; geen mechanisme om tussen
-    meerdere frontend-apps te kiezen (stack-profiel §Frontend(s) > 1).
-  - `dependency-updates` regel 1 — groepeert nog naar een vaste lijst van drie
-    manifestbestanden; een multi-service-project heeft er potentieel veel meer.
-  - `wetsanalyse-ai` zelf krijgt in deze ronde geen `stack-profiel.md` en wordt niet aangeraakt —
-    dat is een aparte, latere stap.
-- Dit is bewust een gefaseerde aanpak, niet uitgesteld door onwil: elke bovenstaande regel raakt
-  een ander deel van de werkwijze, en in één keer alles generaliseren zonder een werkend
-  voorbeeld eerst (dit ADR + regel 3) zou het risico op een half doordachte abstractie vergroten.
+- Elk project moet dit bestand invullen vóór er gebouwd wordt. Dat is een extra stap bij de
+  start, bewust geaccepteerd: de alternatieve kosten (een skill die stilzwijgend de verkeerde
+  stack aanneemt en dat pas bij de review zichtbaar wordt) zijn hoger.
+- De skills die dit bestand nu lezen: `feature-bouwen` (regel 2, 3, 4, 7, 8), `code-review`
+  (regel 1), `architectuur-audit` (regel 1-4), `frontend-bouwen` (regel 1, 6) en
+  `dependency-updates` (regel 1). `CLAUDE.md` §Documentatiestructuur en §Codestandaard doen
+  hetzelfde voor de mappenstructuur en de lintconfiguratie.
+- Een skill die iets aanneemt wat niet in de template staat, is een gat in de template — vul de
+  template aan in plaats van de aanname in de skill te laten staan. De template is daarmee de
+  canonieke lijst van "wat een project zelf moet beslissen".
+- `stack-profiel.md` is geen ADR: het legt vast wát een project gekozen heeft, niet waarom.
+  Blijkt een keuze een echte afweging met nadelen te zijn, dan hoort daar een ADR bij in het
+  project zelf.
+- **Nog niet ingelost:** `voorbeeld/wetsanalyse/` heeft nog geen ingevuld `stack-profiel.md`,
+  omdat die referentie-implementatie nog geen code bevat. Zolang dat zo is, bestaat er in deze
+  repo geen voorbeeld van een ingevuld profiel — alleen de template met de vragen. Dat staat als
+  open punt in `BACKLOG.md`.

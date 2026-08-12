@@ -41,7 +41,8 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
 3. **Schrijf de ene bron, zoals dit project 'm heeft vastgelegd in
    `docs/architectuur/stack-profiel.md` (§De ene bron).** Bestaat dat bestand nog niet: dat is de
    eerste vraag om te beantwoorden, geen aanname om impliciet te maken — kopieer
-   `docs/architectuur/stack-profiel.TEMPLATE.md` en vul 'm in vóór je verdergaat.
+   `stack-profiel.TEMPLATE.md` uit `werkwijze/docs/architectuur/` naar
+   `docs/architectuur/stack-profiel.md` en vul 'm in vóór je verdergaat.
 
    Wat de vorm ook is, deze eisen gelden altijd:
 
