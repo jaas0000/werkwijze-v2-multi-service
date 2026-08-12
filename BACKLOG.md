@@ -4,11 +4,24 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
 
 ## Core (altijd van toepassing)
 
-- [ ] Multi-service topologie — hoe services gedefinieerd, hoe ze communiceren
-- [ ] Contract-first — SQLAlchemy Core + Pydantic + openapi-typescript; CI dwingt generatie af
+- [ ] Multi-service topologie — hoe services gedefinieerd, hoe ze communiceren. Dát het er
+      meerdere zijn ligt vast (ADR-0002); nog open: hoeveel, hoe ze heten, synchroon HTTP of
+      events, en hoe een service-grens in `stack-profiel.md` §Topologie beschreven wordt zodat
+      de skills 'm kunnen lezen
+- [ ] Contract-first — SQLAlchemy Core + Pydantic + openapi-typescript; CI dwingt generatie af.
+      Nog open: hoe "de ene bron" er in die combinatie concreet uitziet (welk bestand, welke
+      relatie tussen tabeldefinitie en Pydantic-model), en hoe de generatieketen heet — de
+      skills verwijzen daarvoor nu naar `stack-profiel.md` §De ene bron / §Contractgeneratie
+- [ ] Cross-service contracten — hoe het contract tussen twee services vastligt en geversioneerd
+      wordt (ADR-0002 stelt alleen dat het een eigen artefact is, geen gedeelde import)
 - [ ] API-versioning — automatisch, expliciete strategie zodat DB-evolutie consumers niet stilletjes breekt
-- [ ] CI/CD per service — monorepo-matrix of losse workflows
-- [ ] Vertical slicing per service
+- [ ] CI/CD per service — monorepo-matrix of losse workflows. De werkwijze verwijst al bij naam
+      naar checks die deze workflow moet leveren: `check-generated-types`,
+      `check-frontend-e2e-coverage`, `check-python-style`, `check-ts-style` en de testrun. Tot
+      die workflow bestaat, staat been 1 van het Verificatie-principe stil
+- [ ] Vertical slicing per service — de indeling *binnen* een service (ADR-0001, ADR-0002); nog
+      open: hoe gedeelde code tussen services eruitziet (gedeelde bibliotheek met eigen
+      versionering, of bewuste duplicatie)
 
 ## Optionele bouwstenen
 
