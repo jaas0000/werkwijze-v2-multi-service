@@ -1,17 +1,16 @@
 # werkwijze-v2-multi-service
 
-**v2** — gericht op multi-service applicaties (meerdere deploybare services, Next.js BFF,
-LLM-orkestratie, async achtergrondtaken). Bouwt voort op de principes van v1 maar de patronen
-lopen uiteen. Zie ook: [`werkwijze-v1-contract-first`](../werkwijze-v1-contract-first/) voor de
-enkelvoudige backend/frontend-stack.
+Een AI-werkwijze voor het bouwen van multi-service applicaties: meerdere onafhankelijk
+deploybare services (ADR-0002), een Next.js BFF, LLM-orkestratie en async achtergrondtaken.
+De methodologie is geschreven om door Claude Code uitgevoerd te worden, niet alleen gelezen.
 
 Deze repo bestaat uit twee mappen:
 
 - **`werkwijze/`** — de methodologie: skills, het hoofddocument en ADR's over de werkwijze zelf.
   Zie `werkwijze/CLAUDE.md` voor de volledige methodologie-uitleg.
-- **`voorbeeld/`** — werkende referentie-implementaties die de werkwijze in de praktijk laten
-  zien, elk in een eigen submap met een eigen stack-profiel:
-  - `wetsanalyse/` — referentie-implementatie voor v2 (nog niet volledig uitgebouwd); zie
+- **`voorbeeld/`** — referentie-implementaties die de werkwijze in de praktijk laten zien, elk
+  in een eigen submap met een eigen stack-profiel:
+  - `wetsanalyse/` — nog niet uitgebouwd: alleen een CLAUDE.md, nog geen code; zie
     `voorbeeld/wetsanalyse/CLAUDE.md`.
 
   Elke submap onder `voorbeeld/` is zelf het kopieerbare startpunt voor een nieuw project met

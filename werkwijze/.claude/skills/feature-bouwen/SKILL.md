@@ -39,30 +39,22 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
    eerste vraag om te beantwoorden, geen aanname om impliciet te maken — kopieer
    `docs/architectuur/stack-profiel.TEMPLATE.md` en vul 'm in vóór je verdergaat.
 
-   In het SQLModel-referentievoorbeeld (zie `werkwijze-v1-contract-first`) is de ene bron één `models.py` per
-   feature met SQLModel-classes (`table=True`), waar elke class tegelijk databasetabel en
-   Pydantic-contract is:
+   Wat de vorm ook is, deze eisen gelden altijd:
 
-   ```python
-   class XBase(SQLModel):          # gedeelde velden
-       ...
+   - **Eén plek per entiteit.** Tabeldefinitie en het contract dat de buitenwereld ziet, komen
+     uit dezelfde bron — geen tweede, met de hand bijgehouden kopie van dezelfde velden.
+   - **Binnen één service.** De ene bron geldt per service, niet projectbreed (ADR-0002): twee
+     services delen hun schema niet via een import, maar via een expliciet contract.
+   - **Onderscheid wat een client mag sturen van wat hij terugkrijgt** — dat zijn twee
+     verschillende vormen, ook als ze nu toevallig dezelfde velden hebben.
+   - **Geen gedragslogica hier.** Een schema kan "mag dit nu wel" niet uitdrukken (regel 5).
+   - **Wees scherp op precisie**: een `str` waar een gesloten verzameling bedoeld is, genereert
+     verderop in de keten een losse `string` en geen strikter type.
 
-   class X(XBase, table=True):     # de tabel
-       id: int | None = Field(default=None, primary_key=True)
-
-   class XCreate(XBase):           # wat een client mag aanleveren
-       ...
-
-   class XRead(XBase):             # wat een client terugkrijgt
-       id: int
-   ```
-
-   Geen gedragslogica hier — een schema kan "mag dit nu wel" niet uitdrukken (regel 5). Vermijd
-   `Relationship()` met een generic forward-ref (`list["Y"]`) onder
-   `from __future__ import annotations` (zie §Bekende valkuilen hieronder); zoek gerelateerde
-   rijen op via `select(...).where(...)` in de router. (Deze twee alinea's zijn specifiek voor
-   het SQLModel-stack-profiel (zie `werkwijze-v1-contract-first`) — een project met een ander
-   stack-profiel past hetzelfde principe toe op zijn eigen vorm van "de ene bron".)
+   De voorziene invulling voor deze werkwijze is SQLAlchemy Core + Pydantic, met
+   `openapi-typescript` als generatiestap (`BACKLOG.md` §Core) — hoe die combinatie er concreet
+   uitziet is nog niet uitgewerkt en is dus precies wat `stack-profiel.md` §De ene bron per
+   project moet vastleggen, niet iets om hier impliciet aan te nemen.
 
 4. **Genereer de keten.**
 
@@ -155,9 +147,10 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
 - **`openapi-typescript` trekt via `@redocly/openapi-core` soms een kwetsbare `js-yaml`-versie
   mee** zonder beschikbare fix. Dev-only build-tooling — risico is acceptabel, raakt nooit de
   productie-runtime.
-- **SQLModel-specifieke valkuilen** (zoals `Relationship()` + forward-ref onder
-  `from __future__ import annotations`) staan in `werkwijze-v1-contract-first` — niet relevant
-  als `stack-profiel.md` een andere ORM beschrijft.
+- **ORM-specifieke valkuilen horen niet hier maar in `stack-profiel.md`** — lazy-loading van
+  relaties, forward-refs in type-annotaties en soortgelijke voetangels verschillen per ORM.
+  Noteer ze bij het stack-profiel van het project dat ze tegenkomt; deze skill blijft
+  stack-onafhankelijk.
 - **Zonder het eigenaar/ownerless-onderscheid in regel 8 verzandt gedeeld gedrag in een
   asymmetrische herimplementatie**: een tweede feature die dezelfde check nodig heeft als een
   bestaande (bijvoorbeeld "bestaat deze entiteit?") krijgt dan al snel een eigen, private
@@ -175,8 +168,8 @@ raakt): voeg hem hier toe als een generieke les, niet als een verslag van één 
 ## Wat dit niet oplost
 
 - **Migratie van een bestaande productiedatabase** — Alembic, los van dit patroon (regel 7).
-- **Contracten tussen services** — OpenAPI/openapi-typescript dekt alleen wat via een
-  `response_model` in déze service loopt; cross-service contracten (aparte schema's,
-  versiebeheer tussen services) zijn een open backlog-item voor v2, niet een geaccepteerde grens.
+- **Contracten tussen services** — de generatieketen dekt alleen wat binnen déze service loopt
+  (regel 3, ADR-0002). Hoe het contract tússen twee services vastligt en geversioneerd wordt, is
+  een open punt in `BACKLOG.md` §Core — geen geaccepteerde grens, maar nog geen antwoord.
 - **Precisie die de bron zelf niet heeft** — een `str` in plaats van een `Literal[...]`
   genereert een losse `string`, geen strikter type. Wees scherp in regel 3.

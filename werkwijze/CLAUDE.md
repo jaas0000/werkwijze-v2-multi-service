@@ -1,8 +1,7 @@
 # CLAUDE.md — Contract-first werkwijze
 
-> **v2 — gericht op multi-service applicaties** (meerdere deploybare services, Next.js BFF,
-> LLM-orkestratie, async achtergrondtaken). Bouwt voort op de principes van v1 maar de patronen
-> lopen uiteen.
+> **Gericht op multi-service applicaties** — meerdere onafhankelijk deploybare services
+> (ADR-0002), een Next.js BFF, LLM-orkestratie en async achtergrondtaken.
 
 ## Wat dit is
 
