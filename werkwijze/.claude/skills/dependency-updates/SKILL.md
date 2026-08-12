@@ -18,8 +18,14 @@ description: >-
 ## Regels
 
 1. Haal de open Dependabot-PR's en -alerts op (`gh pr list --author app/dependabot`,
-   `gh api repos/<owner>/<repo>/dependabot/alerts?state=open`). Groepeer per ecosysteem
-   (`api/pyproject.toml`/`uv.lock`, `frontend/package.json`, `.github/workflows/*.yml`).
+   `gh api repos/<owner>/<repo>/dependabot/alerts?state=open`). Groepeer per **manifest**, niet
+   per ecosysteem: elke service heeft zijn eigen manifest en zijn eigen lockfile, plus de
+   frontend(s) en `.github/workflows/*.yml`. Zoek die lijst op in `stack-profiel.md` §Topologie
+   en §Frontend(s) in plaats van 'm aan te nemen — een gemist manifest ziet er in de rapportage
+   (regel 5) uit als "geen openstaande bumps".
+
+   Dezelfde bump in twee services is twee losse bumps: ze zijn onafhankelijk deploybaar
+   (ADR-0002), dus ze hoeven niet in dezelfde PR of dezelfde week.
 
 2. **Triage per bump:**
    - Patch/minor binnen dezelfde major → **mechanisch**. Kan zonder tussenkomst door naar

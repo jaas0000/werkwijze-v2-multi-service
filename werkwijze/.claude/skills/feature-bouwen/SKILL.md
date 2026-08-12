@@ -30,9 +30,13 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
    duplicatie wél een probleem wordt. (Is de story al door `story-review` gegaan, dan is dit al
    gedaan — controleer alleen dat de story nog actueel is.)
 
-2. **Isoleer.** Nieuwe feature → nieuwe map `api/app/features/<naam>/`. Nooit een tabel of
-   route rechtstreeks in een gedeeld bestand (`db.py`, `main.py`) — die blijven dun, alleen
-   samenvoegers.
+2. **Kies de service, dan isoleer.** Een feature hoort bij precies één service (ADR-0002).
+   Welke services er zijn en waar ze staan, leest `stack-profiel.md` §Topologie voor — is dat
+   niet eenduidig af te leiden, vraag het dan, en verdeel gedrag nooit stilzwijgend over twee
+   services. Binnen de gekozen service: nieuwe feature → nieuwe map
+   `<service>/app/features/<naam>/` (of wat §Feature-eenheid daar zegt). Nooit een tabel of
+   route rechtstreeks in een verzamelbestand van de service (het routes-samenvoegpunt, de
+   database-setup) — die blijven dun, alleen samenvoegers.
 
 3. **Schrijf de ene bron, zoals dit project 'm heeft vastgelegd in
    `docs/architectuur/stack-profiel.md` (§De ene bron).** Bestaat dat bestand nog niet: dat is de
@@ -56,18 +60,19 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
    uitziet is nog niet uitgewerkt en is dus precies wat `stack-profiel.md` §De ene bron per
    project moet vastleggen, niet iets om hier impliciet aan te nemen.
 
-4. **Genereer de keten.**
+4. **Genereer de keten** van de service waar je in werkt: het API-schema uit de ene bron, en
+   daaruit de types voor de consumers. Welk script dat is en welke bestanden het schrijft, staat
+   in `stack-profiel.md` §Contractgeneratie; zegt dat "nee" (geen generatie), dan vervalt deze
+   regel en schrijf je het contract met de hand — maar dan wél op één plek, met dezelfde eis uit
+   regel 3.
 
-   ```bash
-   scripts/genereer-types.sh
-   ```
-
-   `app.openapi()` → `openapi-typescript`. Bewerk gegenereerde bestanden
-   (`frontend/generated/*`) nooit met de hand — draai het script opnieuw. Commit de output mee.
+   Bewerk gegenereerde bestanden nooit met de hand — draai het script opnieuw. Commit de output
+   mee. Genereert de wijziging ook een contract dat een ándere service consumeert, dan is dat
+   geen automatische stap: zie §Wat dit niet oplost.
 
 5. **Schrijf wat niet uit de vorm volgt.** Auth-checks, validatie voorbij het schema,
-   businessregels — in `router.py`. Aparte, hand-geschreven code per concern, geen duplicatie
-   met regel 3.
+   businessregels — in de routelaag van de feature, niet bij het schema. Aparte,
+   hand-geschreven code per concern, geen duplicatie met regel 3.
 
 6. **Test gedrag, niet vorm.** Vorm is al gegarandeerd door regel 3-4. Test de
    acceptatiecriteria en de randgevallen: de businessregel zelf, wat er gebeurt als je hem
@@ -75,10 +80,13 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
 
 ## Situationeel (7-8)
 
-7. **Bestaande database? Migratie apart.** `SQLModel.metadata.create_all()` maakt alleen
-   ontbrekende tabellen aan — geen ALTER, geen kolom-migratie op een bestaande tabel. Zodra dit
-   tegen een bestaande productiedatabase draait: Alembic (of gelijkwaardig), los van dit
-   patroon.
+7. **Bestaande database? Migratie apart.** Volg `stack-profiel.md` §Migraties van de service
+   waar je in werkt. Let op de klassieke val: een "maak ontbrekende tabellen aan bij het
+   opstarten"-mechanisme doet geen ALTER en geen kolom-migratie op een bestaande tabel. Zodra
+   dit tegen een bestaande productiedatabase draait, hoort er een echte migratiestap te zijn
+   (Alembic of gelijkwaardig), los van dit patroon. Raakt de migratie een database die meer dan
+   één service gebruikt, dan is het geen zaak van deze service alleen — dat is een
+   deploy-volgorde-probleem tussen services, geen stap in deze skill.
 
 8. **Gedeelde logica: opportunistisch verwijzen, niet vooruitlopend abstraheren.** Duplicatie
    is pas een probleem ná de tweede, onafhankelijke implementatie van hetzelfde patroon — niet
@@ -91,7 +99,12 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
      functie openbaar in de eigenaar-feature (geen underscore-prefix), importeer 'm vanuit de
      consumerende feature. Geen `shared/`-geval: er is een duidelijke eigenaar.
    - **Het patroon heeft geen natuurlijke eigenaar** (een generieke implementatie die evengoed
-     bij feature A als bij feature B had kunnen ontstaan) → naar `api/app/shared/<naam>.py`.
+     bij feature A als bij feature B had kunnen ontstaan) → naar de `shared/`-map van diezelfde
+     service (`<service>/app/shared/<naam>.py`).
+
+   Beide routes gelden alleen **binnen één service**. Herhaalt een andere service hetzelfde
+   patroon, dan is dat geen import maar een aparte afweging (gedeelde bibliotheek of bewuste
+   duplicatie) — zie ADR-0002 en `architectuur-audit` regel 2.
 
    Ga hiervoor **niet** het hele project doorzoeken (dat staat haaks op regel 2) — systematisch
    zoeken naar duplicatie die je nog niet kende is `architectuur-audit`'s taak, niet die van
@@ -105,14 +118,14 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
 9. **Checklist — doorloop dit expliciet, sla geen stap over:**
 
    - [ ] Tests groen (regel 6).
-   - [ ] Generatieketen gedraaid, geen diff op `frontend/generated/*` (regel 4).
+   - [ ] Generatieketen gedraaid, geen diff op de gegenereerde bestanden (regel 4).
    - [ ] Vroeg de story ook een UI: `frontend-bouwen` is afgerond (inclusief zijn eigen
      E2E-test-eis).
    - [ ] Check `CLAUDE.md` §Instellingen — Simplify bij feature-bouwen:
      - `ja` — draai `/simplify` daadwerkelijk (ingebouwde Claude Code-skill, niet zelf
        herimplementeren: vier parallelle checks — reuse, simplificatie, efficiency, altitude —
-       op de wijzigingen sinds de vorige `/simplify`-ronde op deze PR, exclusief
-       `frontend/generated/*`). Bevindingen direct toepassen. Expliciet **geen correctheid**,
+       op de wijzigingen sinds de vorige `/simplify`-ronde op deze PR, exclusief de
+       gegenereerde bestanden). Bevindingen direct toepassen. Expliciet **geen correctheid**,
        dat blijft `code-review`'s taak. Geen kortsluitroute op basis van "de wijziging is klein"
        — zie §Bekende valkuilen voor waarom juist kleine wijzigingen dit risico lopen.
      - `nee` — sla de daadwerkelijke check over, maar niet stilzwijgend: ga direct door naar de
@@ -128,7 +141,7 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
 
      Dit is het enige controleerbare bewijs dat deze stap is afgehandeld — geen aanname die je
      zelf mag maken. Zonder een van deze vier regels behandelt `code-review` een PR die
-     `api/app/features/**` of `frontend/src/**` raakt als onvolledig.
+     feature- of frontend-code raakt als onvolledig.
 
    Vink deze lijst niet stilzwijgend af door meteen naar git-commando's te gaan (zie §Bekende
    valkuilen).

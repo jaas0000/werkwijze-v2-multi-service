@@ -21,9 +21,15 @@ al klaar (schema, keten, logica, tests). Vraagt de feature geen UI: sla deze ski
 
 ## Regels
 
-1. **Werk vanuit de gegenereerde types.** Importeer uit `frontend/generated/types.ts` — nooit
-   een eigen, met de hand getypeerd datamodel voor de UI verzinnen. Bestaat het generatiescript
-   nog niet voor deze feature: draai eerst `feature-bouwen` regel 4.
+1. **Kies de frontend, werk vanuit de gegenereerde types.** Heeft het project meer dan één
+   frontend-app, dan zegt `stack-profiel.md` §Frontend(s) welke bij deze feature hoort — dat is
+   geen keuze om zelf te maken. Importeer daarna uit de gegenereerde types van die frontend
+   (`<frontend>/generated/`) — nooit een eigen, met de hand getypeerd datamodel voor de UI
+   verzinnen. Bestaat de generatieketen nog niet voor deze feature: draai eerst
+   `feature-bouwen` regel 4.
+
+   Praat de UI met meer dan één service, dan is elk van die contracten apart gegenereerd
+   (ADR-0002): één gegenereerd bestand per service, geen handmatig samengevoegd type ertussen.
 
 2. **Fase 1 — nepdata (de "mockup").** Bouw de component met een hardgecodeerde instantie van
    het gegenereerde type. Geen live fetch. Dit is opzettelijk goedkoop: geen backend-aanroep
@@ -51,18 +57,18 @@ al klaar (schema, keten, logica, tests). Vraagt de feature geen UI: sla deze ski
 6. **Playwright-E2E-test, niet optioneel.**
    - **6a. Wanneer.** Bouw je een nieuwe of gewijzigde UI (d.w.z. je gebruikt `frontend-bouwen`
      sowieso al, zie de Trigger), dan hoort er een test bij in
-     `frontend/tests/e2e/<naam>.spec.ts` die de UI echt in een browser bedient
+     `<frontend>/tests/e2e/<naam>.spec.ts` die de UI echt in een browser bedient
      (`@playwright/test`) — niet een ad-hoc scriptje tijdens het bouwen dat na afloop wordt
      weggegooid (zie §Bekende valkuilen). Geen frontend-wijziging in deze PR: dan is deze regel
      niet van toepassing, net als de rest van deze skill.
    - **6b. Wat minimaal.** Het gelukkige pad (actie uitvoeren, resultaat zien zonder
      page-reload) en één foutpad (bv. een 409 van de server die als zichtbare foutmelding
      verschijnt, niet stil faalt). Draai de test lokaal (`npm run test:e2e`, met de dev-server en
-     de API al draaiend) vóórdat je aflevert. Twee onafhankelijke checks vangen dit daarna nog
-     een keer op, geen van beide is zelfrapportage: CI (`check-frontend-e2e-coverage` in
-     `.github/workflows/ci.yml`) faalt als `frontend/src/` wijzigt zonder een bijbehorende
-     wijziging in `frontend/tests/e2e/`, en `code-review` regel 1 controleert het los daarvan
-     nog een keer bij het lezen van de diff.
+     elke service die de UI aanroept al draaiend) vóórdat je aflevert. Twee onafhankelijke
+     checks vangen dit daarna nog een keer op, geen van beide is zelfrapportage: CI
+     (`check-frontend-e2e-coverage` in `.github/workflows/ci.yml`) faalt als de bron van een
+     frontend wijzigt zonder een bijbehorende wijziging in diens `tests/e2e/`, en `code-review`
+     regel 1 controleert het los daarvan nog een keer bij het lezen van de diff.
 
 7. **Simplify en aflevering gebeuren niet hier.** Ná deze skill loopt `feature-bouwen` regel 9
    verder — één `/simplify`-ronde en één Simplify-regel in het commit-/PR-bericht voor de hele

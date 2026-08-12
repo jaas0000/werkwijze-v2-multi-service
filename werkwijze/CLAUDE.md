@@ -5,10 +5,11 @@
 
 ## Wat dit is
 
-Methodologie voor feature-ontwikkeling in een project met een database, een API en een
-frontend: **contract-first + vertical slicing**. Vorm (velden, types) wordt op één plek
-vastgelegd en gegenereerd naar de rest; gedrag (businessregels) wordt apart, met de hand
-geschreven.
+Methodologie voor feature-ontwikkeling in een applicatie die uit meerdere, onafhankelijk
+deploybare services bestaat, met een of meer frontends ervoor: **contract-first + vertical
+slicing**. Vorm (velden, types) wordt per service op één plek vastgelegd en gegenereerd naar de
+rest; gedrag (businessregels) wordt apart, met de hand geschreven. Een feature hoort bij precies
+één service; vertical slicing is de indeling *binnen* een service (ADR-0001, ADR-0002).
 
 De werkwijze bestaat uit losse **skills** onder `.claude/skills/`, elk met een eigen trigger
 en regel-checklist. Dit bestand is de index — de skills zelf zijn het uitvoerbare document.
@@ -91,7 +92,7 @@ flowchart hieronder toont de onderlinge volgorde in één oogopslag.
 ```mermaid
 flowchart TD
     Story["Nieuwe of gewijzigde story"] --> SR["story-review<br/>checkt volledigheid,<br/>vult prioriteit + story points aan"]
-    SR --> FB["feature-bouwen<br/>schema (models.py) → keten genereren<br/>→ logica (router.py) → tests"]
+    SR --> FB["feature-bouwen<br/>service kiezen → de ene bron → keten<br/>genereren → logica → tests"]
     FB --> SimplifyCheck{Simplify bij<br/>feature-bouwen = ja?}
     FB -->|story vraagt een UI| Frontend["frontend-bouwen (optioneel)<br/>fase 1 nepdata → fase 2 echte data<br/>+ Playwright E2E-test"]
     Frontend --> SimplifyCheck
@@ -114,11 +115,11 @@ flowchart TD
     Comment -.->|mens keurt goed| Triage
     Merge -->|niet-blocking bevindingen| Vervolg["docs/vervolgpunten.md"]
 
-    CI["CI: pytest + codestandaard +<br/>gegenereerde types + frontend build +<br/>E2E-dekking + Playwright E2E (indien aanwezig)"] -.-> Triage
+    CI["CI per service: tests + codestandaard +<br/>gegenereerde types + frontend build +<br/>E2E-dekking + Playwright E2E (indien aanwezig)"] -.-> Triage
     DU["dependency-updates<br/>periodiek, of Dependabot-PR<br/>triageert mechanisch/risico"] -.-> Triage
 
-    DA["architectuur-audit<br/>periodiek: duplicatie, cohesie, grenzen"] -->|duplicatie in ≥2 features,<br/>veilig te verplaatsen| Shared["api/app/shared/"]
-    DA -->|overige bevindingen:<br/>cohesie, grenzen, niet-triviaal| Vervolg
+    DA["architectuur-audit<br/>periodiek per service: duplicatie,<br/>cohesie, grenzen"] -->|duplicatie in ≥2 features<br/>van dezelfde service,<br/>veilig te verplaatsen| Shared["shared/ van die service"]
+    DA -->|overige bevindingen: cohesie, grenzen,<br/>duplicatie tussen services, niet-triviaal| Vervolg
     Shared -.-> FB
 ```
 
@@ -129,8 +130,8 @@ flowchart TD
   - `c4-model.md` — Context/Container/Component/Code (C4-model); zie de §Bijhouden-sectie
     daar voor wanneer elk niveau bijgewerkt moet worden.
   - `adr/NNNN-<naam>.md` — ADR's: projectbrede technische beslissingen (niet feature-specifiek,
-    dat is `docs/stories/`): welke stack, welke afwezigheden (auth, migraties, microservices)
-    en waarom. Eén genummerd bestand per beslissing, kopieer `docs/architectuur/adr/TEMPLATE.md`.
+    dat is `docs/stories/`): welke stack, hoe de services zijn afgebakend, welke afwezigheden
+    (auth, migraties) en waarom. Eén genummerd bestand per beslissing, kopieer `docs/architectuur/adr/TEMPLATE.md`.
     Een gemaakte, beargumenteerde keuze — geen open punt (dat is `docs/vervolgpunten.md`).
   - `stack-profiel.md` — het projectspecifieke antwoord op de vragen die `feature-bouwen` regel 3
     (en, naarmate meer regels gegeneraliseerd worden, mogelijk andere skills) niet meer
@@ -148,11 +149,19 @@ flowchart TD
   verzameld, pure technische wijzigingen ontbreken. Bijgehouden door `pr-triage`.
 - `docs/changelog-technisch.md` — voor AI/team/developers, één regel per gemergde PR zonder
   uitzondering. Bijgehouden door `pr-triage`.
-- `api/app/features/<naam>/` — alles voor die feature: `models.py`, `router.py`, `tests/`.
-- `api/app/shared/` — modules die door de architectuur-audit (of opportunistisch tijdens
-  featurebouw) uit ≥2 features zijn geëxtraheerd.
-- `frontend/generated/` — nooit met de hand bewerken, altijd via `scripts/genereer-types.sh`.
-- `frontend/tests/e2e/` — Playwright-E2E-tests, één per UI-feature (`frontend-bouwen` regel 6);
+Per service (welke services er zijn, staat in `stack-profiel.md` §Topologie — deze werkwijze
+codeert dat niet hard, zie ADR-0002):
+
+- `<service>/app/features/<naam>/` — alles voor die feature: schema, routes, tests.
+- `<service>/app/shared/` — modules die door de architectuur-audit (of opportunistisch tijdens
+  featurebouw) uit ≥2 features van diezelfde service zijn geëxtraheerd. Gedeelde code tússen
+  services loopt hier niet doorheen (ADR-0002).
+
+Per frontend (`stack-profiel.md` §Frontend(s)):
+
+- `<frontend>/generated/` — nooit met de hand bewerken, altijd via de generatieketen
+  (`feature-bouwen` regel 4); één gegenereerd bestand per service waarmee de frontend praat.
+- `<frontend>/tests/e2e/` — Playwright-E2E-tests, één per UI-feature (`frontend-bouwen` regel 6);
   de aanwezigheid ervan wordt in CI gecontroleerd (`check-frontend-e2e-coverage`), niet alleen
   het slagen van wat er al staat (`test-frontend-e2e`).
 

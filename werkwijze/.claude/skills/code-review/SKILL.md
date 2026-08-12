@@ -18,33 +18,38 @@ gehad.
 
 ## Regels
 
-1. Raakt de PR `api/app/features/**` of `frontend/src/**`? Toets 'm dan tegen
+1. Raakt de PR feature-code van een service of de bron van een frontend (welke mappen dat zijn:
+   `stack-profiel.md` §Topologie en §Frontend(s))? Toets 'm dan tegen
    `feature-bouwen`/`frontend-bouwen`, regel voor regel — de bullets hieronder gelden alleen
    voor dat soort PR's, niet voor een documentatie- of CI-only wijziging:
-   - Nieuwe tabellen/routes staan in een eigen `features/<naam>/`-map, niet rechtstreeks in
-     `db.py` of `main.py` (`feature-bouwen` regel 2).
-   - Schema staat alleen op de "ene bron" (zie `stack-profiel.md`) — geen los contract ernaast
-     (`feature-bouwen` regel 3).
-   - Gegenereerde types zijn alleen gewijzigd via het generatiescript, niet met de hand — bij
+   - Nieuwe tabellen/routes staan in een eigen `features/<naam>/`-map binnen één service, niet
+     rechtstreeks in een verzamelbestand van die service (`feature-bouwen` regel 2).
+   - Schema staat alleen op de "ene bron" van die service (zie `stack-profiel.md`) — geen los
+     contract ernaast (`feature-bouwen` regel 3).
+   - Gegenereerde bestanden zijn alleen gewijzigd via het generatiescript, niet met de hand — bij
      twijfel: script opnieuw draaien en diffen (`feature-bouwen` regel 4).
-   - Businessregels en auth-checks staan in `router.py`, niet in `models.py` (`feature-bouwen`
+   - Businessregels en auth-checks staan in de routelaag, niet bij het schema (`feature-bouwen`
      regel 3 vs. 5).
    - Tests toetsen acceptatiecriteria en randgevallen, niet vorm die al door het schema
      gegarandeerd is (`feature-bouwen` regel 6).
-   - Raakt de wijziging een tabel die al in productie bestaat: is er een migratie (Alembic),
-     niet alleen een `create_all()`-aanname (`feature-bouwen` regel 7)?
+   - Raakt de wijziging een tabel die al in productie bestaat: is er een echte migratie, niet
+     alleen een "maak ontbrekende tabellen aan"-aanname (`feature-bouwen` regel 7)?
    - Herhaalt de PR een patroon uit een andere feature: staat de terugverwijzing "gebruikt
      `shared/<naam>.py`, zie daar" óf "gebruikt `<feature>.router.<functie>`, zie daar" in de
      story — beide vormen uit `feature-bouwen` regel 8 zijn geldig — of is er een duidelijke
      reden waarom het (nog) niet gedeeld is?
-   - **Raakt de PR `frontend/src/`?** Staat er een Playwright-E2E-test bij in
-     `frontend/tests/e2e/` (`frontend-bouwen` regel 6)? CI controleert de aanwezigheid via
+   - **Raakt de PR meer dan één service?** Dan is de vraag of dat terecht is (ADR-0002): een
+     gedeelde import over een servicegrens heen is blocking, een expliciet contract + een
+     genoteerde deploy-volgorde niet. Eén story die twee services tegelijk moet wijzigen is op
+     zichzelf een signaal, geen fout.
+   - **Raakt de PR frontend-bron?** Staat er een Playwright-E2E-test bij in de `tests/e2e/`-map
+     van diezelfde frontend (`frontend-bouwen` regel 6)? CI controleert de aanwezigheid via
      `check-frontend-e2e-coverage`, maar niet of de test zinvol is — dit is de kwalitatieve check.
-   - **Voegt de PR een nieuwe map onder `api/app/features/` toe, of het eerste bestand onder
-     `frontend/src/`?** Dan hoort `docs/architectuur/c4-model.md` mee te veranderen (de
-     Component-sectie bij een nieuwe feature, de Container-sectie bij de eerste frontend-map).
-     Geen wijziging aan dat bestand terwijl de structuur wél verandert: vervolgpunt, niet
-     per se blocking (zie de triagetabel in regel 5).
+   - **Voegt de PR een nieuwe feature-map, een nieuwe service of de eerste frontend toe?** Dan
+     hoort `docs/architectuur/c4-model.md` mee te veranderen (de Component-sectie bij een nieuwe
+     feature, de Container-sectie bij een nieuwe service of frontend). Geen wijziging aan dat
+     bestand terwijl de structuur wél verandert: vervolgpunt, niet per se blocking (zie de
+     triagetabel in regel 5).
    - Staat er een geldige `Simplify:`-regel (de vier vormen uit `feature-bouwen` regel 9) in het
      commit-bericht of de PR-beschrijving? Zonder een van de vier is er geen controleerbaar
      bewijs dat die stap is afgehandeld — behandel dat als een onvolledige PR, ongeacht hoe
