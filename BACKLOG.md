@@ -22,6 +22,12 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
 - [ ] Vertical slicing per service — de indeling *binnen* een service (ADR-0001, ADR-0002); nog
       open: hoe gedeelde code tussen services eruitziet (gedeelde bibliotheek met eigen
       versionering, of bewuste duplicatie)
+- [ ] Migraties — Alembic (of gelijkwaardig) i.p.v. een handmatige schema-reconciliatiefunctie
+      met losse `ALTER TABLE`-statements; elke service met een eigen database heeft dit nodig,
+      niet optioneel zodra er een tweede schemawijziging komt
+- [ ] Meerdere frontend-apps — topologie beschrijft nu alleen backend-services; hoeveel
+      frontend-apps er zijn en hoe elk zich verhoudt tot welke service(s)/contract(en) staat nog
+      nergens vast. `frontend-bouwen` gaat vooralsnog uit van precies één `frontend/`-pad
 
 - [ ] Referentie-implementatie `voorbeeld/wetsanalyse/` — bevat nu alleen een CLAUDE.md. Nodig:
       een ingevuld `docs/architectuur/stack-profiel.md` (ADR-0004 verwijst ernaar als het
@@ -30,11 +36,28 @@ Wat er nog in moet komen. Volgorde = volgorde van bespreken, niet van prioriteit
 
 ## Optionele bouwstenen
 
-- [ ] Auth / login — Auth.js + sessie-management + TOTP-2FA
+- [ ] Auth / login — twee gescheiden schema's, niet één: gebruikersinlog (Auth.js +
+      sessie-management + TOTP-2FA, rollen) én een apart service-naar-service/admin-schema
+      (bearer-tokens, andere levensduur/opslag/foutafhandeling dan gebruikersauth)
 - [ ] Secrets — genereren, opslaan als bestanden, doorgeven via `*_FILE`-patroon
-- [ ] MCP-client — externe service koppelen met eigen error-boundary
+- [ ] MCP-server & -client — twee kanten: een eigen MCP-endpoint exposen (een service die
+      andere partijen als MCP-server aanspreken) is een ander bouwstuk dan een externe
+      MCP-service consumeren (het bestaande "MCP-client"-punt)
+- [ ] Contracttests voor MCP-oppervlakken — aparte verificatie naast de generatieketen: een
+      MCP-tool-schema is geen OpenAPI-`response_model` en wordt dus niet door dezelfde check
+      gedekt
 - [ ] LLM-integratie — modelprofielen, concurrency-rem, retry, prompt-caching
+- [ ] Orkestratie/workflow-engine — een centraal proces dat een taak in meerdere fasen
+      aanstuurt (bv. meerdere LLM-aanroepen + tussenstappen na elkaar); ander bouwstuk dan losse
+      LLM-integratie, met een eigen vraag over waar die staat (eigen service, of binnen een
+      feature) en hoe voortgang/status zichtbaar blijft
 - [ ] Async jobs — claim/lease/reaper/reconcile-bij-herstart
+- [ ] Gedeelde referentie-/inhoudsbron tussen een interactieve skill en een runtime-service —
+      bv. dezelfde reference-content die zowel een CLI-skill als een API-endpoint gebruikt; geen
+      gewone databasetabel, dus valt buiten de standaard-Store-abstractie hieronder
+- [ ] Runtime-configuratie / feature-flags — instellingen die tijdens bedrijf wijzigen zonder
+      herdeploy, los van Secrets (die zijn build-/opstarttijd) en los van Store-abstractie (die
+      is voor domeindata)
 - [ ] Observability — structured logs, OTel, Grafana
 - [ ] Store-abstractie — Protocol-gebaseerde Store (SQLite in tests, Postgres in productie)
 - [ ] Deployment — Azure ACA + Docker Compose lokaal
