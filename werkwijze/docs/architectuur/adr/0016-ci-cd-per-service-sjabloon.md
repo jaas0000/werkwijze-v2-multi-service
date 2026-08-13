@@ -23,8 +23,12 @@ services in één workflow bundelt. Elke workflow bevat minimaal, in deze volgor
 4. Alleen als de service een frontend bedient: E2E-dekking + Playwright.
 
 Een wijziging in service A start nooit de CI van service B — elke workflow triggert alleen op
-wijzigingen binnen zijn eigen servicemap (`paths:`-filter). De workflow leeft in de servicemap
-zelf, niet in een centraal root-workflowbestand dat met elke nieuwe service groeit.
+wijzigingen binnen zijn eigen servicemap (`paths:`-filter). Het workflowbestand zelf staat,
+zoals GitHub Actions vereist, altijd op `.github/workflows/` op de repo-root — dat is geen
+keuze, GitHub leest workflows nergens anders (zie ook `CLAUDE.md` §Geen CI op deze repo voor
+dezelfde beperking). "Eigen workflowbestand per service" betekent dus: één los bestand per
+service in die map (bv. `api-ci.yml`, `frontend-ci.yml`), niet één bestand fysiek in de
+servicemap — de scoping zit in de bestandsnaam en de `paths:`-filter, niet in de locatie.
 
 ## Consequenties
 
