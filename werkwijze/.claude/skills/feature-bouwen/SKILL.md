@@ -137,8 +137,10 @@ dat daar verplicht is, behandelt `code-review` de PR als onvolledig.
      - `Simplify: <bevindingen>` — er was iets te verbeteren, en dat is gebeurd.
      - `Simplify: geen` — gedraaid, niets gevonden.
      - `Simplify: overgeslagen (instelling staat op nee)` — de instelling stond uit.
-     - `Simplify: n.v.t. (<reden>)` — deze wijziging bevat geen productiecode om op te
-       toetsen (bv. puur documentatie of CI-configuratie).
+     - `Simplify: n.v.t. (<reden>)` — deze wijziging bevat **geen productiecode** om op te
+       toetsen: puur documentatie, CI-configuratie, of testbestanden zonder bijbehorende
+       implementatiewijziging. Nieuwe productiecode in een nieuwe service of een nieuw bestand
+       valt hier **niet** onder — `/simplify` controleert ook nieuwe code op vereenvoudiging.
 
      Dit is het enige controleerbare bewijs dat deze stap is afgehandeld — geen aanname die je
      zelf mag maken. Zonder een van deze vier regels behandelt `code-review` een PR die
