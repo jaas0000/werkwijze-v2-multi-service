@@ -80,7 +80,7 @@ aflevert om een CI-fail puur op opmaak te voorkomen; dat is gemak, geen verplich
 |---|---|
 | [`story-review`](.claude/skills/story-review/SKILL.md) | Nieuwe of gewijzigde story, vóór er gebouwd wordt. |
 | [`feature-bouwen`](.claude/skills/feature-bouwen/SKILL.md) | Nieuwe user story, of uitbreiding van bestaand gedrag. |
-| [`frontend-bouwen`](.claude/skills/frontend-bouwen/SKILL.md) | **Optioneel** — alleen als de story een UI/scherm vraagt, ná `feature-bouwen` regel 1-6. |
+| [`frontend-bouwen`](.claude/skills/frontend-bouwen/SKILL.md) | **Optioneel** — alleen als de story een UI/scherm vraagt. Fase 1 (mockup) loopt ná `story-review` en vóór `feature-bouwen`; fase 2 (echte data) loopt ná `feature-bouwen` regel 1-6. |
 | [`pr-triage`](.claude/skills/pr-triage/SKILL.md) | PR aangemaakt of bijgewerkt — bepaalt of review, verwerken van bevindingen, mergen of niets de volgende stap is. |
 | [`code-review`](.claude/skills/code-review/SKILL.md) | `pr-triage` concludeert dat de PR nog geen review op de huidige stand heeft gehad. |
 | [`architectuur-audit`](.claude/skills/architectuur-audit/SKILL.md) | Vaste cadans (bv. wekelijks), los van een specifieke feature of PR. |
@@ -94,10 +94,12 @@ flowchart hieronder toont de onderlinge volgorde in één oogopslag.
 ```mermaid
 flowchart TD
     Story["Nieuwe of gewijzigde story"] --> SR["story-review<br/>checkt volledigheid,<br/>vult prioriteit + story points aan"]
-    SR --> FB["feature-bouwen<br/>service kiezen → de ene bron → keten<br/>genereren → logica → tests"]
+    SR -->|story vraagt een UI| Mockup["frontend-bouwen fase 1 (optioneel)<br/>interactieve mockup met nepdata<br/>op de dev-server"]
+    SR -->|geen UI| FB
+    Mockup -->|mens keurt mockup goed| FB["feature-bouwen<br/>service kiezen → de ene bron → keten<br/>genereren → logica → tests"]
+    FB -->|story had een UI| Frontend2["frontend-bouwen fase 2<br/>promoveer mockup → echte API-call<br/>+ Playwright E2E-test"]
     FB --> SimplifyCheck{Simplify bij<br/>feature-bouwen = ja?}
-    FB -->|story vraagt een UI| Frontend["frontend-bouwen (optioneel)<br/>fase 1 nepdata → fase 2 echte data<br/>+ Playwright E2E-test"]
-    Frontend --> SimplifyCheck
+    Frontend2 --> SimplifyCheck
     SimplifyCheck -->|ja| Simplify["/simplify draaien<br/>reuse, simplificatie, efficiency, altitude"]
     SimplifyCheck -->|nee| SkipSimplify["Simplify: overgeslagen<br/>(instelling staat op nee)"]
     Simplify --> EersteKeer{Eerste keer?}
