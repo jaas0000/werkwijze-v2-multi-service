@@ -5,16 +5,17 @@ description: >-
   geschreven wordt: welke bestanden aanmaken of aanpassen, welke migratie, welke
   Pydantic-modellen, welke endpoints, welke testcases — en vraagt de gebruiker om goedkeuring
   via plan mode. Slaat het goedgekeurde plan op in de story-doc als naslagwerk voor
-  `feature-bouwen` en `code-review`. Gebruik deze skill na `story-review` en vóór
-  `feature-bouwen`, bij stories van 3+ story points of als meerdere bestanden/services geraakt
-  worden. Bij eenvoudige 1-2 SP uitbreidingen (één endpoint, geen migratie) mag deze stap
+  `feature-bouwen` en `code-review`. Gebruik deze skill na `story-review` (en na
+  `frontend-bouwen fase 1` als de story een UI heeft), vóór `feature-bouwen`, bij stories van
+  3+ story points of als meerdere bestanden/services geraakt worden. Bij eenvoudige 1-2 SP uitbreidingen (één endpoint, geen migratie) mag deze stap
   worden overgeslagen — maar twijfel je, gebruik hem dan.
 ---
 
 # Implementatieplan — brug tussen story en code
 
-**Trigger:** een goedgekeurde user story (story-review is afgerond), vóór `feature-bouwen`
-begint. Gebruik bij 3+ SP of meerdere geraakte bestanden. Optioneel bij 1-2 SP.
+**Trigger:** na `story-review` (en na `frontend-bouwen fase 1` als de story een UI heeft),
+vóór `feature-bouwen` begint. Gebruik bij 3+ SP of meerdere geraakte bestanden. Optioneel bij
+1-2 SP.
 
 **Doel:** zichtbaar maken *hoe* de story gebouwd wordt — zodat de gebruiker kan bijsturen
 vóórdat er code bestaat, en er een naslagwerk is tijdens `code-review`.

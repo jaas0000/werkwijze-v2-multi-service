@@ -95,12 +95,10 @@ flowchart hieronder toont de onderlinge volgorde in één oogopslag.
 ```mermaid
 flowchart TD
     Story["Nieuwe of gewijzigde story"] --> SR["story-review<br/>checkt volledigheid,<br/>vult prioriteit + story points aan"]
-    SR -->|3+ SP of meerdere bestanden| IP["implementatieplan (optioneel)<br/>bestandsplan + plan mode<br/>goedkeuring → opgeslagen in story-doc"]
-    SR -->|1-2 SP, eenvoudig| FB
-    IP -->|goedgekeurd| FB
     SR -->|story vraagt een UI| Mockup["frontend-bouwen fase 1 (optioneel)<br/>interactieve mockup met nepdata<br/>op de dev-server"]
-    SR -->|geen UI| FB
-    Mockup -->|mens keurt mockup goed| FB["feature-bouwen<br/>service kiezen → de ene bron → keten<br/>genereren → logica → tests"]
+    SR -->|geen UI| IP
+    Mockup -->|mens keurt mockup goed| IP["implementatieplan (optioneel)<br/>bestandsplan + plan mode<br/>goedkeuring → opgeslagen in story-doc<br/>gebruik bij 3+ SP of meerdere bestanden"]
+    IP -->|goedgekeurd of overgeslagen| FB["feature-bouwen<br/>service kiezen → de ene bron → keten<br/>genereren → logica → tests"]
     FB -->|story had een UI| Frontend2["frontend-bouwen fase 2<br/>promoveer mockup → echte API-call<br/>+ Playwright E2E-test"]
     FB --> SimplifyCheck{Simplify bij<br/>feature-bouwen = ja?}
     Frontend2 --> SimplifyCheck
