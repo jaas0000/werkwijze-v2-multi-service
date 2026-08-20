@@ -27,11 +27,32 @@ description: >-
    | Staat | Actie |
    |---|---|
    | Draft, of CI-checks nog niet klaar | **Niets doen** — wachten. |
+   | CI-checks bestaan wel maar hebben aantoonbaar niet gedraaid (workflow-parse-fout: 0s runs, geen jobs, "workflow file issue") of één of meer verplichte checks ontbreken volledig op de HEAD-SHA | **Blocker — fix CI eerst.** Zie regel 1a. |
+   | CI-checks rood (jobs zijn wél gedraaid en daadwerkelijk gefaald) | **Blocker — fix eerst.** Schakel `feature-bouwen` in om de failing checks op te lossen; behandel dit als een blocking bevinding (rij 4). |
    | Dependency-bump mét een zichtbare `dependency-updates: mechanisch — <pakket> <van> → <naar>`-PR-comment (regel 2 van die skill), en CI is groen | **Mergen direct, `code-review` overslaan** — zie regel 2a. |
    | Laatste `code-review`-comment ("Review op `<sha>`: …") noemt niet de huidige HEAD-SHA van de PR, of zo'n comment ontbreekt | **`code-review`** starten. |
    | Laatste `code-review`-comment noemt de huidige HEAD-SHA, en meldt blocking bevindingen | **Schakel `feature-bouwen` in** om de blocking issues op te lossen — dit is feature-werk en volgt diens regels (de ene bron, generatieketen, logica in de routelaag, enz.), geen aparte ad-hoc aanpak vanuit deze skill. Na de fix opnieuw beoordelen (de nieuwe commit wijzigt de HEAD-SHA, dus de rij hierboven geldt weer). |
    | Laatste `code-review`-comment noemt de huidige HEAD-SHA zonder blocking bevindingen, Autonome merge = `nee`, nog geen goedkeuring ná die SHA | **Zet een PR-comment** en wacht — zie regel 2b. |
    | Laatste `code-review`-comment noemt de huidige HEAD-SHA zonder blocking bevindingen, en (Autonome merge = `ja`) of (Autonome merge = `nee` mét menselijke goedkeuring ná die SHA) | **Mergen**, zie regel 4 en 5. |
+
+   **1a. "CI die niet draaide" ≠ "CI groen".** Een PR mag pas verder als de verplichte checks
+   (zie `stack-profiel.md` §CI en `werkwijze/CLAUDE.md` §Codestandaard: `check-generated-types`,
+   `check-frontend-e2e-coverage`, `check-python-style`, `check-ts-style`, testrun per service)
+   ook daadwerkelijk gedraaid hebben op de huidige HEAD-SHA. Een ontbrekende check is even
+   diskwalificerend als een gefaalde check — anders is been 1 van het Verificatie-principe
+   (`werkwijze/CLAUDE.md` §Verificatie-principe) er niet, en leun je stilzwijgend op been 2
+   (menselijke review) zonder dat iemand het door heeft. Concrete signalen:
+
+   - een workflow-run duurt 0s en heeft 0 jobs (workflow-file-parse-fout)
+   - `gh pr checks <nr>` toont "no checks reported"
+   - `gh pr view <nr> --json statusCheckRollup` geeft `[]` terwijl de workflow-triggers wél
+     matchen op de gewijzigde paden
+
+   **Actie:** open een aparte fix-PR die CI werkend maakt (root-cause fixen, niet
+   `continue-on-error: true` of check-uitzettingen), merg die eerst, en herstart de triage van
+   déze PR op de nieuwe stand. Geen `code-review` en geen merge op de PR onder triage tot CI
+   ook echt gedraaid heeft — één keer een groene ronde die "toevallig niet triggerde" is
+   voldoende om drift onopgemerkt te laten binnenglippen.
 
 2. **Nooit mergen zonder review, behalve de uitzondering hieronder.** Een documentatie-only of
    ogenschijnlijk triviale PR gaat eerst langs `code-review` — "dit is toch simpel" is te vaag
